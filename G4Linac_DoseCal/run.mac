@@ -1,0 +1,20 @@
+/Parameters/H5PhaseSpaceName Phase_Space
+/Parameters/ZSTOP 0 cm
+/Parameters/phantomSizeX  20 cm
+/Parameters/phantomSizeY  20 cm
+/Parameters/phantomSizeZ  40 cm
+/Parameters/numberOfVoxelsAlongX 80
+/Parameters/numberOfVoxelsAlongY 80
+/Parameters/numberOfVoxelsAlongZ 80
+/Parameters/ROGcenterPos 0 0 20 cm
+/control/verbose 1
+/run/geometryModified
+/run/initialize
+/run/verbose 2
+
+/random/setSeeds 0 1
+#/vis/specify RODetector 3 true true true
+/run/eventModulo 1000
+/run/beamOn 4000
+
+

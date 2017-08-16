@@ -1,0 +1,15 @@
+
+/Parameters/ZStop 70 cm
+/Parameters/H5PhaseSpaceName Phase_Space
+/Physics/Bremspe_Enabled true
+/Physics/Bremspe_Nsplit 60
+/Physics/setPCut 0.1 mm
+/Physics/setECut  0.1 mm
+/Physics/setGCut  	5 mm
+/random/setSeeds 0 1
+/run/verbose 1
+/event/verbose 0
+/run/geometryModified
+/run/initialize
+/run/eventModulo 10000
+/run/beamOn 30000
