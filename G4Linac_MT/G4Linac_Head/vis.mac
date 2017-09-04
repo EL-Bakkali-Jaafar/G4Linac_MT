@@ -1,0 +1,60 @@
+# set the number of events to be  processed per thread
+/Parameters/NumberOfEventsPerThread 3600
+# set the z coordinate of phase space
+/Parameters/ZStop 100 cm
+# set the name of h5phase space file
+/Parameters/H5PhaseSpaceName Phase_Space
+# if you need to load geometry from a macro file switch false to true
+/Parameters/UseGeomFromText false
+# set the name of macro file that contains geometry description
+/Parameters/NameOfGeomFromTextFile file.geom
+
+# define cut production for positron
+/Physics/setPCut 0.1 mm
+# define cut production for electron
+/Physics/setECut  0.1 mm
+# define cut production for photon
+/Physics/setGCut  	2 mm
+#set the seed number
+/random/setSeeds 0 1
+#verbosity
+/run/verbose 1
+/event/verbose 0
+#update geometry
+/run/geometryModified
+/run/numberOfThreads 3
+/run/initialize
+# enable/disable Bremspe bremsstrahlung splliting technique
+/Physics/Bremspe_Enabled true
+# number of bremsstrahlung splitting
+/Physics/Bremspe_Nsplit 500
+#define the parameters of particle generator
+/gps/particle e-
+/gps/direction 0 0 1
+/gps/pos/type Beam
+/gps/pos/centre 0. 0. -50 cm
+/gps/pos/halfx 0 mm
+/gps/pos/halfy 0 mm
+/gps/pos/sigma_x 0.5 mm
+/gps/pos/sigma_y 0.5 mm
+/gps/ene/type Gauss
+/gps/ene/mono 6 MeV
+/gps/ene/sigma 0.1 MeV
+# The end.
+
+/vis/open OGL 600x600-0+0
+
+/vis/drawVolume
+/vis/viewer/set/style wireframe
+
+/vis/scene/add/hits
+/vis/scene/endOfEventAction accumulate
+
+# Axes, scale, etc.
+/vis/scene/add/scale   # Simple scale line
+/vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
+/vis/scene/add/eventID # Drawn at end of event
+/vis/scene/add/date    # Date stamp
+/vis/scene/add/logo2D  # Simple logo
+/vis/scene/add/logo    # 3D logo
+
