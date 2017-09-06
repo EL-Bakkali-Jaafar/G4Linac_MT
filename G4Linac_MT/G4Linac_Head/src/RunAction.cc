@@ -68,8 +68,8 @@ const std::string DatasetName_histories("BeamData"),
                   MEMBER_PART_DIR_Y("_PART_DIR_Y"),
                   MEMBER_PART_DIR_Z("_PART_DIR_Z"),
                   MEMBER_PART_KINETIC("_PART_KINETIC");
-std::string                          ANSI_RESET_COLOR = "\033[0m",
-                                     ANSI_GREEN = "\033[32m";
+std::string       ANSI_RESET_COLOR = "\033[0m",
+                  ANSI_GREEN = "\033[32m";
 
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
  double  RunAction::diffclock(clock_t clock1,clock_t clock2)
@@ -78,7 +78,6 @@ std::string                          ANSI_RESET_COLOR = "\033[0m",
 	double diffms=(diffticks*1000)/CLOCKS_PER_SEC;
 	return diffms;
    } 
-
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 RunAction::RunAction()
 {
@@ -127,68 +126,90 @@ NUMBER_OF_ACTIVE_EVENTS            =  0;
 RunAction::~RunAction()
 {
 }
-
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::READ_PHSP_DATA( std::string _H5PhaseSpaceFileName)
 {
-
+try{
 H5File file( _H5PhaseSpaceFileName, H5F_ACC_RDONLY );
 DataSet dataset = file.openDataSet( DatasetName );
 H5::CompType mtype2( sizeof(PhspData) );
 G4int data_size  = dataset.getSpace().getSimpleExtentNpoints();
-
     RAM_PhspData    = new PhspData[data_size];
-    mtype2.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),   H5::PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),    H5::PredType::NATIVE_FLOAT);
+    mtype2.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),   H5::PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),    H5::PredType::NATIVE_DOUBLE);
     mtype2.insertMember(MEMBER_PART_PDGE,    HOFFSET(PhspData, PART_PDGE),     H5::PredType::NATIVE_INT);
-    mtype2.insertMember(MEMBER_PART_POS_Y,   HOFFSET(PhspData, PART_POS_Y),    H5::PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_POS_Z,   HOFFSET(PhspData, PART_POS_Z),    H5::PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_DIR_X,   HOFFSET(PhspData, PART_DIR_X),    H5::PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_DIR_Y,   HOFFSET(PhspData, PART_DIR_Y),    H5::PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_DIR_Z,   HOFFSET(PhspData, PART_DIR_Z),    H5::PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC),  H5::PredType::NATIVE_FLOAT);
+    mtype2.insertMember(MEMBER_PART_POS_Y,   HOFFSET(PhspData, PART_POS_Y),    H5::PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_POS_Z,   HOFFSET(PhspData, PART_POS_Z),    H5::PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_DIR_X,   HOFFSET(PhspData, PART_DIR_X),    H5::PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_DIR_Y,   HOFFSET(PhspData, PART_DIR_Y),    H5::PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_DIR_Z,   HOFFSET(PhspData, PART_DIR_Z),    H5::PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC),  H5::PredType::NATIVE_DOUBLE);
     dataset.read( RAM_PhspData, mtype2 );
+G4cout<<"Number of Particle in  " <<_H5PhaseSpaceFileName<< " is : " << data_size<<G4endl;
 for (int i=0; i< data_size; i++) myPhspData_Vector.push_back(RAM_PhspData[i]);
-
-
-
-
+}
+catch( FileIException error )
+{
+error.printError();
+}
+catch( DataSetIException error ){
+error.printError();
+}
+catch( DataSpaceIException error )
+{
+error.printError();
+}
+catch( DataTypeIException error )
+{
+ error.printError();
+}
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::READ_BEAM_DATA( std::string _H5PhaseSpaceFileName)
  {
+try{
      const std::string FileName(_H5PhaseSpaceFileName);
      H5File file( FileName, H5F_ACC_RDONLY );
      DataSet dataset_histories = file.openDataSet( DatasetName_histories );
      H5::CompType mtype_histories( sizeof(BeamData) );
      mtype_histories.insertMember(MEMBER_HISTORIES,     HOFFSET(BeamData, NUMBER_OF_HISTORIES),      H5::PredType::NATIVE_INT)   ;
-     mtype_histories.insertMember(MEMBER_Z_STOP   ,     HOFFSET(BeamData, Z_STOP)            ,      H5::PredType::NATIVE_FLOAT) ;
+     mtype_histories.insertMember(MEMBER_Z_STOP   ,     HOFFSET(BeamData, Z_STOP)            ,      H5::PredType::NATIVE_DOUBLE) ;
      dataset_histories.read( myBeamData, mtype_histories );
-
      myTotalBeamData->NUMBER_OF_HISTORIES= myBeamData->NUMBER_OF_HISTORIES;
      myTotalBeamData->Z_STOP = myBeamData->Z_STOP;
     this->Z_STOP=myBeamData->Z_STOP;
+}
+catch( FileIException error )
+{
+error.printError();
+}
+catch( DataSetIException error ){
+error.printError();
+}
+catch( DataSpaceIException error )
+{
+error.printError();
+}
+catch( DataTypeIException error )
+{
+ error.printError();
+}
  }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::READ_EVENT_DATA( std::string _H5PhaseSpaceFileName)
  {
 try{
-     const std::string FileName(_H5PhaseSpaceFileName);
-       H5File file( FileName, H5F_ACC_RDONLY );
-
-      DataSet dataset_event = file.openDataSet( DatasetName_event );
-      H5::CompType mtype_event( sizeof(EventData) );
-     int data_event_size=dataset_event.getSpace().getSimpleExtentNpoints();
-
-     RAM_EventData = new EventData[data_event_size];
+const std::string FileName(_H5PhaseSpaceFileName);
+H5File file( FileName, H5F_ACC_RDONLY );
+DataSet dataset_event = file.openDataSet( DatasetName_event );
+H5::CompType mtype_event( sizeof(EventData) );
+int data_event_size=dataset_event.getSpace().getSimpleExtentNpoints();
+RAM_EventData = new EventData[data_event_size];
 mtype_event.insertMember(MEMBER_EVENTID,  HOFFSET(EventData, EVENT_ID),                  H5::PredType::NATIVE_INT);
 mtype_event.insertMember(MEMBER_ENTERIES, HOFFSET(EventData, NUMBER_OF_ENTRIES),         H5::PredType::NATIVE_INT);
-     dataset_event.read( RAM_EventData, mtype_event );
+dataset_event.read( RAM_EventData, mtype_event );
 for (int i=0; i< data_event_size; i++) myEventData_Vector.push_back(RAM_EventData[i]);
 delete [] RAM_EventData;
-
-
-
 }
 catch( FileIException error )
 {
@@ -229,49 +250,47 @@ this->H5PhaseSpaceFileName= pDetectorConstruction->H5_PHASE_SPACE_NAME_WITHOUT_E
 READ_BEAM_DATA(this->H5PhaseSpaceFileName);
 READ_PHSP_DATA(this->H5PhaseSpaceFileName);
 READ_EVENT_DATA(this->H5PhaseSpaceFileName);
+std::remove(this->H5PhaseSpaceFileName.c_str());
+this->H5PhaseSpaceFileName= pDetectorConstruction->H5_PHASE_SPACE_NAME_WITHOUT_EXTENSION +".h5";
 G4cout<< "\u21B3"<< " ROMOVING H5PHASE_SPACE : " << this->H5PhaseSpaceFileName.c_str()<<G4endl; 
- std::remove(this->H5PhaseSpaceFileName.c_str());
 }
-WRITE_PHASE_SPACE_FILE(pDetectorConstruction->H5_PHASE_SPACE_NAME_WITHOUT_EXTENSION+".h5");
+WRITE_PHASE_SPACE_FILE(this->H5PhaseSpaceFileName);
+SUMMARY();
 G4cout<< "\u21B3"<< " PHASE SPACE FILE NAMED : " << this->H5PhaseSpaceFileName.c_str()<<" HAS BEEN SUCCESSFULLY CREATED !"<<G4endl; 
 G4cout<<"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#"<< G4endl;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
-
-
 void RunAction::WRITE_PHASE_SPACE_FILE(std::string FILE_NAME)
- {
-
+{
+try{
+const std::string FileName(FILE_NAME);
 hsize_t dim[1], dim_event[1], dim_histories[1];
 dim_histories[0] = 1;
 dim[0]=myPhspData_Vector.size();
-
-
 dim_event[0]  =   myEventData_Vector.size();
-
 int rank                = sizeof(dim) / sizeof(hsize_t);
 int rank_event          = sizeof(dim_event) / sizeof(hsize_t);
 int rank_histories      = sizeof(dim_histories) / sizeof(hsize_t);
 H5::CompType mtype(sizeof(PhspData));
 mtype.insertMember(MEMBER_PART_PDGE,    HOFFSET(PhspData, PART_PDGE),     H5::PredType::NATIVE_INT   );
-mtype.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),   H5::PredType::NATIVE_FLOAT);
-mtype.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),    H5::PredType::NATIVE_FLOAT );
-mtype.insertMember(MEMBER_PART_POS_Y,   HOFFSET(PhspData, PART_POS_Y),    H5::PredType::NATIVE_FLOAT );
-mtype.insertMember(MEMBER_PART_POS_Z,   HOFFSET(PhspData, PART_POS_Z),    H5::PredType::NATIVE_FLOAT );
-mtype.insertMember(MEMBER_PART_DIR_X,   HOFFSET(PhspData, PART_DIR_X),    H5::PredType::NATIVE_FLOAT );
-mtype.insertMember(MEMBER_PART_DIR_Y,   HOFFSET(PhspData, PART_DIR_Y),    H5::PredType::NATIVE_FLOAT );
-mtype.insertMember(MEMBER_PART_DIR_Z,   HOFFSET(PhspData, PART_DIR_Z),    H5::PredType::NATIVE_FLOAT );
-mtype.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC),  H5::PredType::NATIVE_FLOAT );
+mtype.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),   H5::PredType::NATIVE_DOUBLE);
+mtype.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),    H5::PredType::NATIVE_DOUBLE );
+mtype.insertMember(MEMBER_PART_POS_Y,   HOFFSET(PhspData, PART_POS_Y),    H5::PredType::NATIVE_DOUBLE );
+mtype.insertMember(MEMBER_PART_POS_Z,   HOFFSET(PhspData, PART_POS_Z),    H5::PredType::NATIVE_DOUBLE );
+mtype.insertMember(MEMBER_PART_DIR_X,   HOFFSET(PhspData, PART_DIR_X),    H5::PredType::NATIVE_DOUBLE );
+mtype.insertMember(MEMBER_PART_DIR_Y,   HOFFSET(PhspData, PART_DIR_Y),    H5::PredType::NATIVE_DOUBLE );
+mtype.insertMember(MEMBER_PART_DIR_Z,   HOFFSET(PhspData, PART_DIR_Z),    H5::PredType::NATIVE_DOUBLE );
+mtype.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC),  H5::PredType::NATIVE_DOUBLE );
 H5::CompType mtype_event(sizeof(EventData));
 mtype_event.insertMember(MEMBER_EVENTID,  HOFFSET(EventData, EVENT_ID),                  H5::PredType::NATIVE_INT);
 mtype_event.insertMember(MEMBER_ENTERIES, HOFFSET(EventData, NUMBER_OF_ENTRIES),         H5::PredType::NATIVE_INT);
 H5::CompType mtype_histories(sizeof(BeamData));
 mtype_histories.insertMember(MEMBER_HISTORIES,  HOFFSET(BeamData, NUMBER_OF_HISTORIES),   H5::PredType::NATIVE_INT);
-mtype_histories.insertMember(MEMBER_Z_STOP,     HOFFSET(BeamData, Z_STOP),               H5::PredType::NATIVE_FLOAT);
+mtype_histories.insertMember(MEMBER_Z_STOP,     HOFFSET(BeamData, Z_STOP),               H5::PredType::NATIVE_DOUBLE);
 H5::DataSpace space(rank, dim);
 H5::DataSpace space_event(rank_event, dim_event);
 H5::DataSpace space_histories(rank_histories, dim_histories);
-H5::H5File *file                 = new H5::H5File(FILE_NAME, H5F_ACC_TRUNC	);
+H5::H5File *file                 = new H5::H5File( FileName, H5F_ACC_TRUNC	);
 H5::DataSet *dataset             = new H5::DataSet(file->createDataSet(DatasetName, mtype, space));
 H5::DataSet *dataset_event       = new H5::DataSet(file->createDataSet(DatasetName_event, mtype_event, space_event));
 H5::DataSet *dataset_histories   = new H5::DataSet(file->createDataSet(DatasetName_histories, mtype_histories, space_histories));
@@ -288,38 +307,49 @@ for (unsigned int i=0; i<myPhspData_Vector.size(); i++){
      myPhspData[i]. PART_DIR_Y   =    myPhspData_Vector[i]. PART_DIR_Y;
      myPhspData[i]. PART_DIR_Z   =    myPhspData_Vector[i]. PART_DIR_Z;
 }
+G4cout<<" pass" <<G4endl;
 this->NUMBER_OF_ACTIVE_EVENTS=myEventData_Vector.size();
 myEventData = new EventData[myEventData_Vector.size()];
 for (unsigned int i=0; i<myEventData_Vector.size(); i++){
 
-     myEventData[i].EVENT_ID           = myEventData_Vector[i].EVENT_ID  ;
-     myEventData[i].NUMBER_OF_ENTRIES  =  myEventData_Vector[i].NUMBER_OF_ENTRIES;
+myEventData[i].EVENT_ID           =  myEventData_Vector[i].EVENT_ID  ;
+myEventData[i].NUMBER_OF_ENTRIES  =  myEventData_Vector[i].NUMBER_OF_ENTRIES;
 
 } 
-
 dataset_histories->write(myBeamData, mtype_histories);
 dataset_event ->write(myEventData,  mtype_event);
 dataset->write(myPhspData, mtype);
+
 GetStatistics();
+
 end=clock();
 
+delete   dataset_event;
+delete   dataset_histories;
+delete   dataset;
+delete   file;
 
-SUMMARY();
-   // 
-delete [] myPhspData;
-    //
-delete [] myEventData;
-    delete   dataset_event;
-    delete   dataset_histories;
-    delete   dataset;
-    delete   file;
-
- }
-/*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
+}
+catch( FileIException error )
+{
+error.printError();
+}
+catch( DataSetIException error ){
+error.printError();
+}
+catch( DataSpaceIException error )
+{
+error.printError();
+}
+catch( DataTypeIException error )
+{
+ error.printError();
+}
+}
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::SUMMARY()
 {
-
+G4cout<<"SUMMARY()" <<G4endl;
 this->elapsed_time= double(diffclock(end,begin)/1000);
 time_t theTime= time(NULL);
 struct std::tm* aTime = localtime(&theTime);
@@ -339,7 +369,7 @@ Summary_file<<"MULTI_THREADING SUPPORT: YES "<< G4endl;
 Summary_file <<"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#"<< G4endl;
 Summary_file <<"    @DATE_OF_CREATION: "<<asctime(aTime);   
 Summary_file <<"    @ELAPSED_TIME: "<<this->elapsed_time/(double) nthread<<   " seconds."<<G4endl;       
-Summary_file <<"    @PHASE_SPACE_NAME: "<<H5PHASE_SPACE_NAME_WITHOUT_EXTENSION+H5PHASE_SPACE_FILE_EXTENSION<<G4endl;
+Summary_file <<"    @PHASE_SPACE_NAME: "<<pDetectorConstruction->H5_PHASE_SPACE_NAME_WITHOUT_EXTENSION+".h5"<<G4endl;
 Summary_file <<"    @Z_STOP: " <<this->Z_STOP<<" mm." <<G4endl;
 if (bremspe_flag==true) {
 Summary_file <<"    @REDUCTION VARIANCE TECHNIQUE: BREMSPE"<<G4endl;          
@@ -417,7 +447,6 @@ Summary_file<<"    @POSITRONS_MIN_WEIGHT: "  << POSITRONS_WEIGHT_MIN <<"" <<G4en
 Summary_file<<"    @POSITRONS_MEAN_WEIGHT: " << POSITRONS_WEIGHT_MEAN/(double)NUMBER_OF_POSITRONS<<""<<G4endl;
 Summary_file<<" ____________________________________________________________________________________________________________" <<G4endl;
 }
-
 if (NUMBER_OF_PROTONS  >   0)
 {
 Summary_file<<"    @PROTONS_MAX_WEIGHT: "  << PROTON_WEIGHT_MAX <<" " <<G4endl;
@@ -432,7 +461,6 @@ Summary_file<<"    @NEUTRONS_MIN_WEIGHT: "  << NEUTRON_WEIGHT_MIN <<"" <<G4endl;
 Summary_file<<"    @NEUTRONS_MEAN_WEIGHT: " << NEUTRON_WEIGHT_MEAN/(double)NUMBER_OF_NEUTRONS<<""<<G4endl;
 Summary_file<<" ____________________________________________________________________________________________________________" <<G4endl;
 }
-
 Summary_file.close();
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
@@ -480,64 +508,53 @@ if (PROTON_ENERGY_MAX > TEMP )   PROTON_ENERGY_MIN    = Energy;
 void RunAction::PHOTON_WEIGHT(G4double Weight )
 {
 G4double TEMP = Weight;
-
 {
-if (PHOTON_WEIGHT_MAX <= TEMP ) PHOTON_WEIGHT_MAX  = Weight;
-if (PHOTON_WEIGHT_MAX > TEMP )PHOTON_WEIGHT_MIN  = Weight;
+if (PHOTON_WEIGHT_MAX <= TEMP )  PHOTON_WEIGHT_MAX  = Weight;
+if (PHOTON_WEIGHT_MAX > TEMP )   PHOTON_WEIGHT_MIN  = Weight;
 /*............................*/ PHOTON_WEIGHT_MEAN = PHOTON_WEIGHT_MEAN+Weight;
 }
-
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::ELECTRONS_WEIGHT(G4double Weight )
 {
 G4double TEMP = Weight;
-
 if (ELECTRONS_WEIGHT_MAX <= TEMP ) ELECTRONS_WEIGHT_MAX  = Weight;
-if (ELECTRONS_WEIGHT_MAX > TEMP ) ELECTRONS_WEIGHT_MIN  = Weight;
-/*............................*/ ELECTRONS_WEIGHT_MEAN = ELECTRONS_WEIGHT_MEAN+Weight;
-
+if (ELECTRONS_WEIGHT_MAX > TEMP )  ELECTRONS_WEIGHT_MIN  = Weight;
+/*............................*/   ELECTRONS_WEIGHT_MEAN = ELECTRONS_WEIGHT_MEAN+Weight;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::POSITRONS_WEIGHT(G4double Weight )
 {
 G4double TEMP = Weight;
-
 if (POSITRONS_WEIGHT_MAX <= TEMP ) POSITRONS_WEIGHT_MAX  = Weight;
-if (POSITRONS_WEIGHT_MAX > TEMP ) POSITRONS_WEIGHT_MIN  = Weight;
-/*............................*/ POSITRONS_WEIGHT_MEAN = POSITRONS_WEIGHT_MEAN+Weight;
-
+if (POSITRONS_WEIGHT_MAX > TEMP )  POSITRONS_WEIGHT_MIN  = Weight;
+/*............................*/   POSITRONS_WEIGHT_MEAN = POSITRONS_WEIGHT_MEAN+Weight;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::PROTONS_WEIGHT(G4double Weight )
 {
 G4double TEMP = Weight;
 
-if (PROTON_WEIGHT_MAX <= TEMP ) PROTON_WEIGHT_MAX  = Weight;
-if (PROTON_WEIGHT_MAX > TEMP ) PROTON_WEIGHT_MIN  = Weight;
+if (PROTON_WEIGHT_MAX <= TEMP )  PROTON_WEIGHT_MAX  = Weight;
+if (PROTON_WEIGHT_MAX > TEMP )   PROTON_WEIGHT_MIN  = Weight;
 /*............................*/ PROTON_WEIGHT_MEAN = PROTON_WEIGHT_MEAN+Weight;
-
 }
-
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::NEUTRONS_WEIGHT(G4double Weight )
 {
 G4double TEMP = Weight;
 if (NEUTRON_WEIGHT_MAX <= TEMP ) NEUTRON_WEIGHT_MAX  = Weight;
-if (NEUTRON_WEIGHT_MAX > TEMP ) NEUTRON_WEIGHT_MIN  = Weight;
+if (NEUTRON_WEIGHT_MAX > TEMP )  NEUTRON_WEIGHT_MIN  = Weight;
 /*............................*/ NEUTRON_WEIGHT_MEAN = NEUTRON_WEIGHT_MEAN+Weight;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::GetStatistics()
 {// void
-
 try{ 
-
 for (unsigned int i=0; i<NUMBER_OF_PARTICLES; i++){
 tmp.PART_KINETIC =  myPhspData[i]. PART_KINETIC;
 tmp.PART_PDGE =     myPhspData[i]. PART_PDGE;
 tmp.PART_WEIGHT =    myPhspData[i]. PART_WEIGHT;
-
 switch(tmp.PART_PDGE)
 {
 case 22:
@@ -545,40 +562,49 @@ case 22:
 NUMBER_OF_PHOTONS++;
 PHOTONS_ENERGY(tmp.PART_KINETIC);
 PHOTON_WEIGHT(tmp.PART_WEIGHT);
-if (NUMBER_OF_PHOTONS==1) PHOTON_WEIGHT_MIN=tmp.PART_WEIGHT;
+if (NUMBER_OF_PHOTONS==1) 
+{PHOTON_WEIGHT_MIN=tmp.PART_WEIGHT;
+PHOTON_ENERGY_MIN=tmp.PART_KINETIC;
+}
 break;
 case 11:
 // ELECTRON
 NUMBER_OF_ELECTRONS++;
 ELECTRONS_ENERGY(tmp.PART_KINETIC);
 ELECTRONS_WEIGHT(tmp.PART_WEIGHT);
-if (NUMBER_OF_ELECTRONS==1) ELECTRONS_WEIGHT_MIN=tmp.PART_WEIGHT;
+if (NUMBER_OF_ELECTRONS==1){ ELECTRONS_WEIGHT_MIN=tmp.PART_WEIGHT;
+ELECTRON_ENERGY_MIN=tmp.PART_KINETIC;
+}
 break;
 case -11:
 // POSITRON
 NUMBER_OF_POSITRONS++;
 POSITRONS_ENERGY(tmp.PART_KINETIC);
 POSITRONS_WEIGHT(tmp.PART_WEIGHT);
-if (NUMBER_OF_POSITRONS==1) POSITRONS_WEIGHT_MIN=tmp.PART_WEIGHT;
+if (NUMBER_OF_POSITRONS==1) { POSITRONS_WEIGHT_MIN=tmp.PART_WEIGHT;
+POSITRON_ENERGY_MIN=tmp.PART_KINETIC;
+}
 break;
 case 2112:
 // NEUTRON
 NUMBER_OF_PROTONS++;
 PROTONS_ENERGY(tmp.PART_KINETIC);
 PROTONS_WEIGHT(tmp.PART_WEIGHT);
-if (NUMBER_OF_PROTONS==1) PROTON_WEIGHT_MIN=tmp.PART_WEIGHT;
+if (NUMBER_OF_PROTONS==1) {PROTON_WEIGHT_MIN=tmp.PART_WEIGHT;
+PROTON_ENERGY_MIN=tmp.PART_KINETIC;
+}
 break;
 case 2122:
 // PROTON
 NUMBER_OF_NEUTRONS++;
 NEUTRONS_ENERGY(tmp.PART_KINETIC);
 NEUTRONS_WEIGHT(tmp.PART_WEIGHT);
-if (NUMBER_OF_NEUTRONS==1) NEUTRON_WEIGHT_MIN=tmp.PART_WEIGHT;
+if (NUMBER_OF_NEUTRONS==1) {NEUTRON_WEIGHT_MIN=tmp.PART_WEIGHT;
+NEUTRON_ENERGY_MIN=tmp.PART_KINETIC;}
 break;
 default:
 G4cout <<tmp.PART_PDGE  <<G4endl;
 }
-
 }
 delete [] myPhspData;
 }
@@ -602,6 +628,5 @@ delete [] myPhspData;
    {
       error.printError();
    }
-
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/

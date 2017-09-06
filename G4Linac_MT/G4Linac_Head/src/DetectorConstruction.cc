@@ -109,8 +109,10 @@ volmgr->AddTextFile(filename);
 //------------------------------------------------
 // Read the text files and construct the GEANT4 geometry
 //------------------------------------------------
-G4VPhysicalVolume* physiWorld = volmgr->ReadAndConstructDetector();
-return physiWorld;
+this->physWorld= volmgr->ReadAndConstructDetector();
+
+
+return this->physWorld;
 } else {
 G4NistManager* nist = G4NistManager::Instance();
 this->world_sizeXY =2*m;

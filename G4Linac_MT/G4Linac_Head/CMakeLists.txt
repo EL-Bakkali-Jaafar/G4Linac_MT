@@ -18,6 +18,7 @@ add_executable( G4Linac_Head G4Linac_Head.cc ${sources} ${headers})
 target_link_libraries( G4Linac_Head ${Geant4_LIBRARIES} -lhdf5_cpp -lhdf5)
 set(SCRIPTS
   run.mac
+linac.geom
   vis.mac
 
   )

@@ -159,7 +159,7 @@ G4double H5DataAnalysisHelper::GetPosX(int id,int part_pdge){
 
 if  (part_pdge==0) { 
 
- return RAM_PhspData[id].PART_KINETIC;
+ return RAM_PhspData[id].PART_POS_X;
 
 } else 
 if (part_pdge!=0){
@@ -186,7 +186,7 @@ G4double H5DataAnalysisHelper::GetPosY(int id,int part_pdge){
 
 if  (part_pdge==0) { 
 
- return RAM_PhspData[id].PART_KINETIC;
+ return RAM_PhspData[id].PART_POS_Y;
 
 } else 
 if (part_pdge!=0){
@@ -660,7 +660,7 @@ void H5DataAnalysisHelper::READ_BEAM_DATA()
      DataSet dataset_histories = file.openDataSet( DatasetName_histories );
     CompType mtype_histories( sizeof(BeamData) );
      mtype_histories.insertMember(MEMBER_HISTORIES,     HOFFSET(BeamData, NUMBER_OF_HISORIES),     PredType::NATIVE_INT);
-     mtype_histories.insertMember(MEMBER_Z_STOP,        HOFFSET(BeamData, Z_STOP),                 PredType::NATIVE_FLOAT);
+     mtype_histories.insertMember(MEMBER_Z_STOP,        HOFFSET(BeamData, Z_STOP),                 PredType::NATIVE_DOUBLE);
      dataset_histories.read( RAM_BeamData, mtype_histories );
  }
 
@@ -676,15 +676,15 @@ void H5DataAnalysisHelper::READ_PHASE_SPACE_DATA()
      data_size_PhspData  = dataset.getSpace().getSimpleExtentNpoints();
     RAM_PhspData = new PhspData[data_size_PhspData];
 
-    mtype2.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),  PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),   PredType::NATIVE_FLOAT);
+    mtype2.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),  PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),   PredType::NATIVE_DOUBLE);
     mtype2.insertMember(MEMBER_PART_PDGE,    HOFFSET(PhspData, PART_PDGE),    PredType::NATIVE_INT);
-    mtype2.insertMember(MEMBER_PART_POS_Y,   HOFFSET(PhspData, PART_POS_Y),   PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_POS_Z,   HOFFSET(PhspData, PART_POS_Z),   PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_DIR_X,   HOFFSET(PhspData, PART_DIR_X),   PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_DIR_Y,   HOFFSET(PhspData, PART_DIR_Y),   PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_DIR_Z,   HOFFSET(PhspData, PART_DIR_Z),   PredType::NATIVE_FLOAT);
-    mtype2.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC), PredType::NATIVE_FLOAT);
+    mtype2.insertMember(MEMBER_PART_POS_Y,   HOFFSET(PhspData, PART_POS_Y),   PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_POS_Z,   HOFFSET(PhspData, PART_POS_Z),   PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_DIR_X,   HOFFSET(PhspData, PART_DIR_X),   PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_DIR_Y,   HOFFSET(PhspData, PART_DIR_Y),   PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_DIR_Z,   HOFFSET(PhspData, PART_DIR_Z),   PredType::NATIVE_DOUBLE);
+    mtype2.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC), PredType::NATIVE_DOUBLE);
     dataset.read( RAM_PhspData, mtype2 );
 
 }

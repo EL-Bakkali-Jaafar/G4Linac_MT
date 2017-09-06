@@ -126,7 +126,7 @@ int Nsplit,GeneratorFlag,NumberOfEventsPerThread;
     typedef struct
     {
        int    PART_PDGE;
-       float  PART_WEIGHT
+       double  PART_WEIGHT
                 ,PART_POS_X
                 ,PART_POS_Y
                 ,PART_POS_Z
@@ -140,7 +140,7 @@ int Nsplit,GeneratorFlag,NumberOfEventsPerThread;
 
      typedef struct
      {
-         G4int    EVENT_ID,
+         int    EVENT_ID,
                   NUMBER_OF_ENTRIES;
 
 
@@ -148,8 +148,8 @@ int Nsplit,GeneratorFlag,NumberOfEventsPerThread;
 
   typedef struct
   {
-     G4int    NUMBER_OF_HISORIES;
-   G4float     Z_STOP;
+     int    NUMBER_OF_HISORIES;
+   G4double    Z_STOP;
 
   }BeamData;
  //

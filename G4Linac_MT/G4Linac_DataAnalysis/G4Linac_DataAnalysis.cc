@@ -288,6 +288,7 @@ G4double max_energy=myH5DataAnalysisHelper->GetMaxKineticEnergy(pdge_all_particl
 G4double min_energy=myH5DataAnalysisHelper->GetMinKineticEnergy(pdge_all_particles);
 G4cout<<" Min_Kinetic_Energy: " << min_energy<<G4endl;
 G4cout<<" Max_Kinetic_Energy: " << max_energy<<G4endl;
+
 if (min_energy == max_energy){
 G4cout<<" fatal error : min_energy = max energy " <<G4endl;
 return false;
@@ -298,7 +299,9 @@ G4double max_x= myH5DataAnalysisHelper->GetMaxPosX(0);
 G4double max_y= myH5DataAnalysisHelper->GetMaxPosY(0);
 G4double min_x= myH5DataAnalysisHelper->GetMinPosX(0);
 G4double min_y= myH5DataAnalysisHelper->GetMinPosY(0);
-fHistoManager->SetParametersForPhaseSpaceDataSpatialDistXY("Spatial Distribution XY",  xbins, max_x/cm,  min_x/cm, ybins,max_y/cm, min_y/cm );
+G4cout<<" Min_x: " << min_x<<G4endl;
+G4cout<<" Max_x: " << max_x<<G4endl;
+fHistoManager->SetParametersForPhaseSpaceDataSpatialDistXY("Spatial Distribution XY",  xbins, max_x/cm,  min_x/cm, ybins,max_y/cm, min_y/cm);
 G4double _energy= 0.0;
 for (unsigned i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
 {
@@ -322,6 +325,8 @@ G4double max_x= myH5DataAnalysisHelper->GetMaxPosX(pdge_photon);
 G4double max_y= myH5DataAnalysisHelper->GetMaxPosY(pdge_photon);
 G4double min_x= myH5DataAnalysisHelper->GetMinPosX(pdge_photon);
 G4double min_y= myH5DataAnalysisHelper->GetMinPosY(pdge_photon);
+G4cout<<" Min_x: " << min_x<<G4endl;
+G4cout<<" Max_x: " << max_x<<G4endl;
 fHistoManager->SetParametersForPhaseSpaceDataPhotonSpatialDistXY_With_Kinetic("Spatial distribution of photons in function of its kinetic energies",  xbins, max_x,  min_x, ybins,max_y, min_y );
 //for (unsigned i=0; i< 10; i++)
 //

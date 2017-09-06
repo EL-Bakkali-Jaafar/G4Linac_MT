@@ -1,13 +1,13 @@
 # set the number of events to be  processed per thread
-/Parameters/NumberOfEventsPerThread 6000
+/Parameters/NumberOfEventsPerThread 1200
 # set the z coordinate of phase space
 /Parameters/ZStop 100 cm
 # set the name of h5phase space file
-/Parameters/H5PhaseSpaceName Phase_Space
+/Parameters/H5PhaseSpaceName PhaseSpace
 # if you need to load geometry from a macro file switch false to true
-/Parameters/UseGeomFromText false
+/Parameters/UseGeomFromText true
 # set the name of macro file that contains geometry description
-/Parameters/NameOfGeomFromTextFile file.geom
+/Parameters/NameOfGeomFromTextFile linac.geom
 
 # define cut production for positron
 /Physics/setPCut 0.1 mm
@@ -27,12 +27,12 @@
 # enable/disable Bremspe bremsstrahlung splliting technique
 /Physics/Bremspe_Enabled true
 # number of bremsstrahlung splitting
-/Physics/Bremspe_Nsplit 500
+/Physics/Bremspe_Nsplit 900
 #define the parameters of particle generator
 /gps/particle e-
 /gps/direction 0 0 1
 /gps/pos/type Beam
-/gps/pos/centre 0. 0. -50 cm
+/gps/pos/centre 0. 0. 0 cm
 /gps/pos/halfx 0 mm
 /gps/pos/halfy 0 mm
 /gps/pos/sigma_x 0.5 mm

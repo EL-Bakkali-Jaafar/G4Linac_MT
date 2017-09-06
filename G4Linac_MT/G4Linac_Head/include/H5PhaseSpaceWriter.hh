@@ -57,8 +57,8 @@ public:
 G4SliceTimer *timer;
 typedef struct
 {
-    G4int    PART_PDGE;
-    G4float  PART_WEIGHT
+    int    PART_PDGE;
+   double  PART_WEIGHT
             ,PART_POS_X
             ,PART_POS_Y
             ,PART_POS_Z
@@ -78,7 +78,7 @@ typedef struct
 typedef struct
 {
      unsigned int    NUMBER_OF_HISTORIES;
-     G4float     Z_STOP;
+     double     Z_STOP;
 }BeamData;
  //
 PhspData tmp;

@@ -81,12 +81,12 @@ G4double GetKineticEnergy(int ,int);
 typedef struct
 {
 int   NUMBER_VOXELS_ALONG_X,NUMBER_VOXELS_ALONG_Y,NUMBER_VOXELS_ALONG_Z;
-float  PHANTOM_SIZE_X,PHANTOM_SIZE_Y,PHANTOM_SIZE_Z;
+double  PHANTOM_SIZE_X,PHANTOM_SIZE_Y,PHANTOM_SIZE_Z;
 int  
 VOXEL_XID,
 VOXEL_YID,
 VOXEL_ZID;
-float  
+double  
 DOSE,
 RSD;
 }DosCalData;
@@ -94,8 +94,8 @@ RSD;
 
 typedef struct
 {
-G4int    PART_PDGE;
-G4float  PART_WEIGHT
+int    PART_PDGE;
+double  PART_WEIGHT
         ,PART_POS_X
         ,PART_POS_Y
         ,PART_POS_Z
@@ -107,33 +107,33 @@ G4float  PART_WEIGHT
 
 typedef struct
 {
-G4int     EVENT_ID,
+int     EVENT_ID,
           NUMBER_OF_ENTRIES;
 }EventData;
 
 typedef struct
 {
-G4int     NUMBER_OF_HISORIES;
-G4float   Z_STOP;
+int     NUMBER_OF_HISORIES;
+double   Z_STOP;
 
 }BeamData;
 
 typedef struct
 {
-G4int    VOXEL_XID,
+int    VOXEL_XID,
          VOXEL_YID,
          VOXEL_ZID;
-G4float  DOSE,
+double  DOSE,
          RSD;
 
 }DosimetricData;
 
 typedef struct
 {
-G4int   NUMBER_VOXELS_ALONG_X,
+int   NUMBER_VOXELS_ALONG_X,
         NUMBER_VOXELS_ALONG_Y,
         NUMBER_VOXELS_ALONG_Z;
-G4float PHANTOM_SIZE_X,
+double PHANTOM_SIZE_X,
         PHANTOM_SIZE_Y,
         PHANTOM_SIZE_Z;
 }PhantomData;

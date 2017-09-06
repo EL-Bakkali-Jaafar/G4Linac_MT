@@ -119,7 +119,7 @@ G4double                           ELECTRON_ENERGY_MAX           ,
 typedef struct
 {
 int    PART_PDGE;
-float  PART_WEIGHT
+double  PART_WEIGHT
       ,PART_POS_X
       ,PART_POS_Y
       ,PART_POS_Z
@@ -142,7 +142,7 @@ typedef struct
 {
 unsigned int    
         NUMBER_OF_HISTORIES;
-float     
+double     
         Z_STOP;
 
 }BeamData;
