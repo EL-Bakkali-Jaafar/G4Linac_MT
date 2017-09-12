@@ -38,15 +38,18 @@
 #include "HistoManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "H5DataAnalysisHelper.hh"
+#include <stdio.h>
+#include <stdlib.h>
+std::string TERMINAL_HEADER =
+
+"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#\nG4LINAC_MT version 1.O: a Geant4-based application for Medical Linear Accelerator\nDeveloped by Dr.Jaafar EL Bakkali, Assistant Prof. of Nuclear Physics, Rabat, Morocco,  10/09/ 2017\nWebpage :https://github.com/EL-Bakkali-Jaafar/G4Linac_MT\n#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#\n";
+
 std::string ANSI_RESET_COLOR = "\033[0m";
 std::string ANSI_GREEN = "\033[32m";
 int main(int argc,char** argv)
 {
 /*-------------TERMINAL HEADER-------------------*/
-G4cout<< "\033[31m" <<"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#"<< G4endl;
-G4cout<<"G4LINAC_MT version 1.O: a Geant4-based application for Medical Linear Accelerator"<< G4endl;
-G4cout<< "Developed by Dr.Jaafar EL Bakkali, Assistant Prof. of Nuclear Physics, Tetouan City,Morocco,  30/08/ 2017 "<< G4endl;
-G4cout<<"WebSite: www.g4linac_mt.github.com "<< G4endl;
+G4cout<< TERMINAL_HEADER<< G4endl;
 G4cout<<"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#"<<  "\033[0m"<< G4endl;
 /*-------------TERMINAL HEADER-------------------*/
 G4cout<<ANSI_GREEN<<"G4LinacDataAnalysis: a tool for analyzing and histogramming h5PhaseSpace data and dosimetric data." << ANSI_RESET_COLOR<<G4endl;
@@ -85,7 +88,7 @@ if (argc== 6){
 G4String DataType = param_1 ;
 G4String NameOfFile=param_2;
 
-int _number_of_voxels_along_y,_number_of_voxels_along_x,_number_of_voxels_along_z;
+unsigned int _number_of_voxels_along_y,_number_of_voxels_along_x,_number_of_voxels_along_z;
 G4double _Phantom_size_x, _Phantom_size_y, _Phantom_size_z;
 double HalfVoxelDimensionAlongX,HalfVoxelDimensionAlongY,HalfVoxelDimensionAlongZ;
 G4double max_x,min_x;
@@ -136,8 +139,8 @@ if (PhysicalQuantity=="xprofile")
 
 macrofile="xprofile.C";
 HistoManager *fHistoManager = HistoManager::GetInstance();
-int ycid = atoi(param_4.c_str() );
-int zcid = atoi(param_5.c_str() );
+unsigned int ycid = atoi(param_4.c_str() );
+unsigned int zcid = atoi(param_5.c_str() );
 G4double max_edep= myH5DataAnalysisHelper->GetMaxEnergyDepositXProfile(ycid,zcid );
 G4double min_edep= myH5DataAnalysisHelper->GetMinEnergyDepositXProfile(ycid,zcid);
 if (max_edep==0)
@@ -146,7 +149,7 @@ G4cout<<ANSI_GREEN<<"G4LinacDataAnalysis:max_edep must be > 0.0"<<ANSI_RESET_COL
 return false;
 }
 fHistoManager->SetParametersForXprofile( _number_of_voxels_along_x,ycid,  max_edep,  min_edep,  max_x,  min_x);
-for (int i=0; i< _number_of_voxels_along_x ;i++)
+for (unsigned int i=0; i< _number_of_voxels_along_x ;i++)
 {
 G4double x=  ( - _number_of_voxels_along_x + 1+ 2*i )*HalfVoxelDimensionAlongX;
 G4double edep= myH5DataAnalysisHelper->GetEnergyDeposit(i,ycid, zcid);
@@ -158,8 +161,8 @@ if (PhysicalQuantity=="yprofile")
 {
 macrofile="yprofile.C";
 HistoManager *fHistoManager = HistoManager::GetInstance();
-int xcid = atoi(param_4.c_str() );
-int zcid = atoi(param_5.c_str() );
+unsigned int xcid = atoi(param_4.c_str() );
+unsigned int zcid = atoi(param_5.c_str() );
 G4double max_edep= myH5DataAnalysisHelper->GetMaxEnergyDepositXProfile(xcid,zcid );
 G4double min_edep= myH5DataAnalysisHelper->GetMinEnergyDepositXProfile(xcid,zcid);
 if (max_edep==0)
@@ -168,7 +171,7 @@ G4cout<<ANSI_GREEN<<"G4LinacDataAnalysis:max_edep must be > 0.0"<<ANSI_RESET_COL
 return false;
 }
 fHistoManager->SetParametersForYprofile( _number_of_voxels_along_y,xcid,  max_edep,  min_edep,  max_y,  min_y);
-for (int i=0; i< _number_of_voxels_along_y ;i++)
+for ( unsigned int i=0; i< _number_of_voxels_along_y ;i++)
 {
 G4double y=  ( - _number_of_voxels_along_y + 1+ 2*i )*HalfVoxelDimensionAlongY;
 G4double edep= myH5DataAnalysisHelper->GetEnergyDeposit(xcid,i, zcid);
@@ -179,7 +182,7 @@ fHistoManager->Save();
 if (PhysicalQuantity=="dose_heatmap")
 {//if (PhysicalQuantity=="profile")
 macrofile="dose_heatmap.C";
-int zid = atoi(param_4.c_str() );
+unsigned int zid = atoi(param_4.c_str() );
 G4double max_edep= myH5DataAnalysisHelper->GetMaxEnergyDepositHeatMap(zid );
 G4double min_edep= myH5DataAnalysisHelper->GetMinEnergyDepositHeatMap(zid );
 if (max_edep==0)
@@ -197,13 +200,12 @@ fHistoManager->SetTitle_Edep_2DHeatMap("Dose_2DHeatMap");
 G4cout<< ANSI_GREEN<<"G4LinacDataAnalysis:Max x : " << max_x << ANSI_RESET_COLOR<<G4endl;
 fHistoManager->SetParametersForDosimetricData2DheatMap(_number_of_voxels_along_x ,_number_of_voxels_along_y, max_edep, min_edep,  max_x, min_x,  max_y,  min_y);
 
-for (int i=0; i< _number_of_voxels_along_x ;i++)
+for (unsigned int i=0; i< _number_of_voxels_along_x ;i++)
 {
-for (int j=0; j<_number_of_voxels_along_y; j++)
+for (unsigned int j=0; j<_number_of_voxels_along_y; j++)
 {
 G4double x=  ( - _number_of_voxels_along_x + 1+ 2*i )*HalfVoxelDimensionAlongX;
 G4double y=  ( - _number_of_voxels_along_y + 1+ 2*j )*HalfVoxelDimensionAlongY;
-G4double zpos=  ( - _number_of_voxels_along_z + 1+ 2*zid )*HalfVoxelDimensionAlongZ;
 G4double z= myH5DataAnalysisHelper->GetEnergyDeposit(i,j, zid);
 fHistoManager->Fill_Edep_2DHeatMap( x,  y, z);
 }//for j
@@ -213,8 +215,8 @@ fHistoManager->Save();
 else if (PhysicalQuantity=="pdd") 
 {
 macrofile="pdd.C";
-int xid = atoi(param_4.c_str() );
-int yid = atoi(param_5.c_str() );
+unsigned int xid = atoi(param_4.c_str() );
+unsigned int yid = atoi(param_5.c_str() );
 if (xid > _number_of_voxels_along_x-1) {
 G4cout<< ANSI_GREEN<<" ERROR IN XID "<<xid << " > "<< _number_of_voxels_along_x-1<<ANSI_RESET_COLOR  <<G4endl;
 return false;
@@ -235,7 +237,7 @@ fHistoManager->SetTitleEdepDistributionZ("PDD");
 max_z=_Phantom_size_z;
 min_z=0;
 fHistoManager->SetParametersForDosimetricDataPdd(_number_of_voxels_along_z , max_edep, min_edep,max_z,min_z);
-for (int j=0; j<_number_of_voxels_along_z; j++)
+for (unsigned int j=0; j<_number_of_voxels_along_z; j++)
 {
 G4double z=0.5*_Phantom_size_z+ ( - _number_of_voxels_along_z + 1+ 2*j )*HalfVoxelDimensionAlongZ;
 G4double edep= myH5DataAnalysisHelper->GetEnergyDeposit(xid,yid, j);
@@ -247,7 +249,7 @@ fHistoManager->Save();
 }////if ( DataType=="DosimeticData")
 else if ( DataType=="PhaseSpaceData")
 {//if ( DataType=="PhaseSpaceData")
-G4String NameOfFile=param_2;
+NameOfFile=param_2;
 G4String PhysicalQuantity=param_3;
 if (PhysicalQuantity=="photon_energy_spectrum") {
 macrofile="photon_energy_spectrum.C";
@@ -256,8 +258,8 @@ myH5DataAnalysisHelper->READ_BEAM_DATA();
 myH5DataAnalysisHelper->READ_EVENT_DATA();
 myH5DataAnalysisHelper->READ_PHASE_SPACE_DATA();
 HistoManager *fHistoManager = HistoManager::GetInstance();
-int EnergyBins=500;
-int pdge_photon= 22;
+unsigned int EnergyBins=500;
+unsigned int pdge_photon= 22;
 G4double max_energy=myH5DataAnalysisHelper->GetMaxKineticEnergy(pdge_photon);
 G4double min_energy=myH5DataAnalysisHelper->GetMinKineticEnergy(pdge_photon);
 G4cout<<ANSI_GREEN <<" Min_Kinetic_Energy: " << min_energy<<G4endl;
@@ -283,7 +285,6 @@ myH5DataAnalysisHelper->READ_BEAM_DATA();
 myH5DataAnalysisHelper->READ_EVENT_DATA();
 myH5DataAnalysisHelper->READ_PHASE_SPACE_DATA();
 HistoManager *fHistoManager = HistoManager::GetInstance();
-int EnergyBins=1000;
 G4double max_energy=myH5DataAnalysisHelper->GetMaxKineticEnergy(pdge_all_particles);
 G4double min_energy=myH5DataAnalysisHelper->GetMinKineticEnergy(pdge_all_particles);
 G4cout<<" Min_Kinetic_Energy: " << min_energy<<G4endl;
@@ -293,16 +294,15 @@ if (min_energy == max_energy){
 G4cout<<" fatal error : min_energy = max energy " <<G4endl;
 return false;
 }
-int xbins=1000;
-int ybins=1000;
-G4double max_x= myH5DataAnalysisHelper->GetMaxPosX(0);
-G4double max_y= myH5DataAnalysisHelper->GetMaxPosY(0);
-G4double min_x= myH5DataAnalysisHelper->GetMinPosX(0);
-G4double min_y= myH5DataAnalysisHelper->GetMinPosY(0);
+unsigned int xbins=1000;
+unsigned int ybins=1000;
+ max_x= myH5DataAnalysisHelper->GetMaxPosX(0);
+ max_y= myH5DataAnalysisHelper->GetMaxPosY(0);
+ min_x= myH5DataAnalysisHelper->GetMinPosX(0);
+ min_y= myH5DataAnalysisHelper->GetMinPosY(0);
 G4cout<<" Min_x: " << min_x<<G4endl;
 G4cout<<" Max_x: " << max_x<<G4endl;
 fHistoManager->SetParametersForPhaseSpaceDataSpatialDistXY("Spatial Distribution XY",  xbins, max_x/cm,  min_x/cm, ybins,max_y/cm, min_y/cm);
-G4double _energy= 0.0;
 for (unsigned i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
 {
 G4double x_pos = myH5DataAnalysisHelper->GetPosX(i,0);
@@ -318,13 +318,13 @@ myH5DataAnalysisHelper->READ_BEAM_DATA();
 myH5DataAnalysisHelper->READ_EVENT_DATA();
 myH5DataAnalysisHelper->READ_PHASE_SPACE_DATA();
 HistoManager *fHistoManager = HistoManager::GetInstance();
-int xbins=1000;
-int ybins=1000;
-int pdge_photon= 22;
-G4double max_x= myH5DataAnalysisHelper->GetMaxPosX(pdge_photon);
-G4double max_y= myH5DataAnalysisHelper->GetMaxPosY(pdge_photon);
-G4double min_x= myH5DataAnalysisHelper->GetMinPosX(pdge_photon);
-G4double min_y= myH5DataAnalysisHelper->GetMinPosY(pdge_photon);
+unsigned int xbins=1000;
+unsigned int ybins=1000;
+unsigned int pdge_photon= 22;
+ max_x= myH5DataAnalysisHelper->GetMaxPosX(pdge_photon);
+ max_y= myH5DataAnalysisHelper->GetMaxPosY(pdge_photon);
+ min_x= myH5DataAnalysisHelper->GetMinPosX(pdge_photon);
+ min_y= myH5DataAnalysisHelper->GetMinPosY(pdge_photon);
 G4cout<<" Min_x: " << min_x<<G4endl;
 G4cout<<" Max_x: " << max_x<<G4endl;
 fHistoManager->SetParametersForPhaseSpaceDataPhotonSpatialDistXY_With_Kinetic("Spatial distribution of photons in function of its kinetic energies",  xbins, max_x,  min_x, ybins,max_y, min_y );
@@ -354,18 +354,18 @@ myH5DataAnalysisHelper->READ_BEAM_DATA();
 myH5DataAnalysisHelper->READ_EVENT_DATA();
 myH5DataAnalysisHelper->READ_PHASE_SPACE_DATA();
 HistoManager *fHistoManager = HistoManager::GetInstance();
-int xbins=1000;
-int ybins=1000;
-int pdge_electron= 11;
-G4double max_x= myH5DataAnalysisHelper->GetMaxPosX(pdge_electron);
-G4double max_y= myH5DataAnalysisHelper->GetMaxPosY(pdge_electron);
-G4double min_x= myH5DataAnalysisHelper->GetMinPosX(pdge_electron);
-G4double min_y= myH5DataAnalysisHelper->GetMinPosY(pdge_electron);
+unsigned int xbins=1000;
+unsigned int ybins=1000;
+unsigned int pdge_electron= 11;
+ max_x= myH5DataAnalysisHelper->GetMaxPosX(pdge_electron);
+ max_y= myH5DataAnalysisHelper->GetMaxPosY(pdge_electron);
+ min_x= myH5DataAnalysisHelper->GetMinPosX(pdge_electron);
+ min_y= myH5DataAnalysisHelper->GetMinPosY(pdge_electron);
 fHistoManager->SetParametersForPhaseSpaceDataElectronSpatialDistXY_With_Kinetic("Spatial distribution of electrons in function of its kinetic energies",  xbins, max_x,  min_x, ybins,max_y, min_y );
 //for (unsigned i=0; i< 10; i++)
 //
 G4double _energy=0.0;
-for (unsigned i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
+for (unsigned int i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
 {
 if (myH5DataAnalysisHelper->RAM_PhspData[i].PART_PDGE==11){
  _energy= myH5DataAnalysisHelper->GetKineticEnergy(i,pdge_electron);
@@ -394,7 +394,7 @@ G4cout<< ANSI_GREEN<<" min theta: :"<< min_theta/deg<<G4endl;
 int thetaBins=1000;
 fHistoManager->SetParametersForPhaseSpaceDataPhotonAngularDistribution(" Photon Angular Distribution", thetaBins, max_theta/deg,  min_theta/deg);
 //
-for (unsigned i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
+for (unsigned int i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
 //for (unsigned i=0; i< 10; i++)
 {
 G4double _theta = myH5DataAnalysisHelper->GetTheta(i,pdge_photon);
@@ -418,7 +418,7 @@ G4cout<<" min theta: :"<< min_theta/deg<<G4endl;
 int thetaBins=1000;
 fHistoManager->SetParametersForPhaseSpaceDataElectronAngularDistribution(" Electron Angular Distribution", thetaBins, max_theta/deg,  min_theta/deg);
 //
-for (unsigned i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
+for (unsigned int i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
 //for (unsigned i=0; i< 10; i++)
 {
 G4double _theta = myH5DataAnalysisHelper->GetTheta(i,pdge_electron);
@@ -446,7 +446,7 @@ return false;
 }
 fHistoManager->SetParametersForPhaseSpaceDataElectronEnergySpectrum("Electron Kinetic Energy Spectrum", EnergyBins, max_energy, min_energy);
 G4double _electron_kinetic_energy= 0.0;
-for (unsigned i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
+for (unsigned int i=0; i< myH5DataAnalysisHelper->data_size_PhspData; i++)
 {
 _electron_kinetic_energy= myH5DataAnalysisHelper->GetKineticEnergy(i,pdge_electron);
 //G4cout<<_electron_kinetic_energy<<G4endl;
@@ -459,6 +459,9 @@ fHistoManager->Save();
 
 
 }
-G4cout<< "\033[32m"<<"G4LinacDataAnalysis: Now you must run this command : " << "\033[33m"<<"root " <<macrofile<<ANSI_RESET_COLOR <<G4endl;
+G4cout<< "\033[32m"<<"G4LinacDataAnalysis: Now this command will be excuted : " << "\033[33m"<<"root " <<macrofile<<ANSI_RESET_COLOR <<G4endl;
+std::string command= "root ./macros/"+macrofile;
+
+system(command.c_str());
 return 0;
 }

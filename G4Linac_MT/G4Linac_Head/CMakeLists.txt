@@ -19,7 +19,9 @@ target_link_libraries( G4Linac_Head ${Geant4_LIBRARIES} -lhdf5_cpp -lhdf5)
 set(SCRIPTS
   run.mac
 linac.geom
+run_geom.mac
   vis.mac
+g4linac_head.sh
 
   )
 

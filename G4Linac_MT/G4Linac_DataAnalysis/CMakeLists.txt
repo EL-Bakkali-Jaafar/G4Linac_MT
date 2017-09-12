@@ -28,10 +28,10 @@ electron_spatial_distribution_xy_with_kinetic.C
 xprofile.C
 yprofile.C
 )
-foreach(_script ${./macro/_SCRIPTS})
+foreach(_script ${_SCRIPTS})
 configure_file(
-${PROJECT_SOURCE_DIR}/${_script}
-${PROJECT_BINARY_DIR}/${_script}
+${PROJECT_SOURCE_DIR}/macros/${_script}
+${PROJECT_BINARY_DIR}/macros/${_script}
 COPYONLY
 )
 endforeach()

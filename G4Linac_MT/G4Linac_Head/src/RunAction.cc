@@ -69,7 +69,10 @@ const std::string DatasetName_histories("BeamData"),
                   MEMBER_PART_DIR_Z("_PART_DIR_Z"),
                   MEMBER_PART_KINETIC("_PART_KINETIC");
 std::string       ANSI_RESET_COLOR = "\033[0m",
-                  ANSI_GREEN = "\033[32m";
+                  ANSI_GREEN = "\033[32m",
+                  TERMINAL_HEADER =
+
+"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#\nG4LINAC_MT version 1.O: a Geant4-based application for Medical Linear Accelerator\nDeveloped by Dr.Jaafar EL Bakkali, Assistant Prof. of Nuclear Physics, Rabat, Morocco,  10/09/ 2017\nWebpage :https://github.com/EL-Bakkali-Jaafar/G4Linac_MT\n#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#\n";
 
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
  double  RunAction::diffclock(clock_t clock1,clock_t clock2)
@@ -134,18 +137,18 @@ H5File file( _H5PhaseSpaceFileName, H5F_ACC_RDONLY );
 DataSet dataset = file.openDataSet( DatasetName );
 H5::CompType mtype2( sizeof(PhspData) );
 G4int data_size  = dataset.getSpace().getSimpleExtentNpoints();
-    RAM_PhspData    = new PhspData[data_size];
-    mtype2.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),   H5::PredType::NATIVE_DOUBLE);
-    mtype2.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),    H5::PredType::NATIVE_DOUBLE);
-    mtype2.insertMember(MEMBER_PART_PDGE,    HOFFSET(PhspData, PART_PDGE),     H5::PredType::NATIVE_INT);
-    mtype2.insertMember(MEMBER_PART_POS_Y,   HOFFSET(PhspData, PART_POS_Y),    H5::PredType::NATIVE_DOUBLE);
-    mtype2.insertMember(MEMBER_PART_POS_Z,   HOFFSET(PhspData, PART_POS_Z),    H5::PredType::NATIVE_DOUBLE);
-    mtype2.insertMember(MEMBER_PART_DIR_X,   HOFFSET(PhspData, PART_DIR_X),    H5::PredType::NATIVE_DOUBLE);
-    mtype2.insertMember(MEMBER_PART_DIR_Y,   HOFFSET(PhspData, PART_DIR_Y),    H5::PredType::NATIVE_DOUBLE);
-    mtype2.insertMember(MEMBER_PART_DIR_Z,   HOFFSET(PhspData, PART_DIR_Z),    H5::PredType::NATIVE_DOUBLE);
-    mtype2.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC),  H5::PredType::NATIVE_DOUBLE);
-    dataset.read( RAM_PhspData, mtype2 );
-G4cout<<"Number of Particle in  " <<_H5PhaseSpaceFileName<< " is : " << data_size<<G4endl;
+RAM_PhspData    = new PhspData[data_size];
+mtype2.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),   H5::PredType::NATIVE_DOUBLE);
+mtype2.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),    H5::PredType::NATIVE_DOUBLE);
+mtype2.insertMember(MEMBER_PART_PDGE,    HOFFSET(PhspData, PART_PDGE),     H5::PredType::NATIVE_INT);
+mtype2.insertMember(MEMBER_PART_POS_Y,   HOFFSET(PhspData, PART_POS_Y),    H5::PredType::NATIVE_DOUBLE);
+mtype2.insertMember(MEMBER_PART_POS_Z,   HOFFSET(PhspData, PART_POS_Z),    H5::PredType::NATIVE_DOUBLE);
+mtype2.insertMember(MEMBER_PART_DIR_X,   HOFFSET(PhspData, PART_DIR_X),    H5::PredType::NATIVE_DOUBLE);
+mtype2.insertMember(MEMBER_PART_DIR_Y,   HOFFSET(PhspData, PART_DIR_Y),    H5::PredType::NATIVE_DOUBLE);
+mtype2.insertMember(MEMBER_PART_DIR_Z,   HOFFSET(PhspData, PART_DIR_Z),    H5::PredType::NATIVE_DOUBLE);
+mtype2.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC),  H5::PredType::NATIVE_DOUBLE);
+dataset.read( RAM_PhspData, mtype2 );
+G4cout<< "\u21B3"<< " G4LINAC_HEAD-> NUMBER OF PARTICLES IN  " <<_H5PhaseSpaceFileName<< " IS  " << data_size<<G4endl;
 for (int i=0; i< data_size; i++) myPhspData_Vector.push_back(RAM_PhspData[i]);
 }
 catch( FileIException error )
@@ -168,16 +171,16 @@ catch( DataTypeIException error )
 void RunAction::READ_BEAM_DATA( std::string _H5PhaseSpaceFileName)
  {
 try{
-     const std::string FileName(_H5PhaseSpaceFileName);
-     H5File file( FileName, H5F_ACC_RDONLY );
-     DataSet dataset_histories = file.openDataSet( DatasetName_histories );
-     H5::CompType mtype_histories( sizeof(BeamData) );
-     mtype_histories.insertMember(MEMBER_HISTORIES,     HOFFSET(BeamData, NUMBER_OF_HISTORIES),      H5::PredType::NATIVE_INT)   ;
-     mtype_histories.insertMember(MEMBER_Z_STOP   ,     HOFFSET(BeamData, Z_STOP)            ,      H5::PredType::NATIVE_DOUBLE) ;
-     dataset_histories.read( myBeamData, mtype_histories );
-     myTotalBeamData->NUMBER_OF_HISTORIES= myBeamData->NUMBER_OF_HISTORIES;
-     myTotalBeamData->Z_STOP = myBeamData->Z_STOP;
-    this->Z_STOP=myBeamData->Z_STOP;
+const std::string FileName(_H5PhaseSpaceFileName);
+H5File file( FileName, H5F_ACC_RDONLY );
+DataSet dataset_histories = file.openDataSet( DatasetName_histories );
+H5::CompType mtype_beam_data( sizeof(BeamData) );
+mtype_beam_data.insertMember(MEMBER_HISTORIES,     HOFFSET(BeamData, NUMBER_OF_HISTORIES),      H5::PredType::NATIVE_INT)   ;
+mtype_beam_data.insertMember(MEMBER_Z_STOP   ,     HOFFSET(BeamData, Z_STOP)            ,      H5::PredType::NATIVE_DOUBLE) ;
+dataset_histories.read( myBeamData, mtype_beam_data );
+myTotalBeamData->NUMBER_OF_HISTORIES= myBeamData->NUMBER_OF_HISTORIES;
+myTotalBeamData->Z_STOP = myBeamData->Z_STOP;
+this->Z_STOP=myBeamData->Z_STOP;
 }
 catch( FileIException error )
 {
@@ -193,11 +196,10 @@ error.printError();
 catch( DataTypeIException error )
 {
  error.printError();
-}
- }
+}}
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::READ_EVENT_DATA( std::string _H5PhaseSpaceFileName)
- {
+{
 try{
 const std::string FileName(_H5PhaseSpaceFileName);
 H5File file( FileName, H5F_ACC_RDONLY );
@@ -226,37 +228,39 @@ catch( DataTypeIException error )
 {
  error.printError();
 }
- }
+}
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::BeginOfRunAction(const G4Run* )
 {
  begin=clock();
 /*-------------TERMINAL HEADER-------------------*/
-G4cout<<"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#"<< G4endl;
-G4cout<<"G4LINAC_MT version 1.O: a Geant4-based application for Medical Linear Accelerator"<< G4endl;
-G4cout<< "Developed by Dr.Jaafar EL Bakkali, Assistant Prof. of Nuclear Physics, Tetouan City,Morocco,  30/08/ 2017 "<< G4endl;
-G4cout<<"Webpage :https://github.com/EL-Bakkali-Jaafar/G4Linac_MT"<< G4endl;
-G4cout<<"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#"<< G4endl;
+G4cout<<TERMINAL_HEADER<<G4endl;
 /*-------------TERMINAL HEADER-------------------*/
+G4RunManager* runManager = G4RunManager::GetRunManager();
+DetectorConstruction* pDetectorConstruction = (DetectorConstruction*)(runManager->GetUserDetectorConstruction());
+G4cout<< "\u21B3"<< " G4LINAC_HEAD-> STARTING SIMULATION ! "<<G4endl;
+G4cout<< "\u21B3"<< " G4LINAC_HEAD-> NUMBER OF THREADS IS " <<pDetectorConstruction->NUMBER_OF_THREADS <<G4endl;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::EndOfRunAction(const G4Run*)
 {
+end=clock();
 G4RunManager* runManager = G4RunManager::GetRunManager();
 DetectorConstruction* pDetectorConstruction = (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
 for (int i=0; i< pDetectorConstruction->NUMBER_OF_THREADS; i++)
 {
-this->H5PhaseSpaceFileName= pDetectorConstruction->H5_PHASE_SPACE_NAME_WITHOUT_EXTENSION+"_"+ std::to_string(i) +".h5";
-READ_BEAM_DATA(this->H5PhaseSpaceFileName);
-READ_PHSP_DATA(this->H5PhaseSpaceFileName);
-READ_EVENT_DATA(this->H5PhaseSpaceFileName);
-std::remove(this->H5PhaseSpaceFileName.c_str());
+std::string h5PhaseSpaceNameThread= pDetectorConstruction->H5_PHASE_SPACE_NAME_WITHOUT_EXTENSION+"_"+ std::to_string(i) +".h5";
+READ_BEAM_DATA(h5PhaseSpaceNameThread);
+READ_PHSP_DATA(h5PhaseSpaceNameThread);
+READ_EVENT_DATA(h5PhaseSpaceNameThread);
+std::remove(h5PhaseSpaceNameThread.c_str());
 this->H5PhaseSpaceFileName= pDetectorConstruction->H5_PHASE_SPACE_NAME_WITHOUT_EXTENSION +".h5";
-G4cout<< "\u21B3"<< " ROMOVING H5PHASE_SPACE : " << this->H5PhaseSpaceFileName.c_str()<<G4endl; 
+G4cout<< "\u21B3"<< " G4LINAC_HEAD-> ROMOVING H5PHASE_SPACE NAMED  " << h5PhaseSpaceNameThread<<G4endl; 
 }
 WRITE_PHASE_SPACE_FILE(this->H5PhaseSpaceFileName);
 SUMMARY();
-G4cout<< "\u21B3"<< " PHASE SPACE FILE NAMED : " << this->H5PhaseSpaceFileName.c_str()<<" HAS BEEN SUCCESSFULLY CREATED !"<<G4endl; 
+G4cout<< "\u21B3"<< " G4LINAC_HEAD-> PHASE SPACE FILE NAMED  " << this->H5PhaseSpaceFileName.c_str()<<" HAS BEEN SUCCESSFULLY CREATED !"<<G4endl; 
+G4cout<< "\u21B3"<< " G4LINAC_HEAD-> END OF SIMULATION ! "<<G4endl;
 G4cout<<"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#"<< G4endl;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
@@ -284,51 +288,27 @@ mtype.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC),  H5::Pr
 H5::CompType mtype_event(sizeof(EventData));
 mtype_event.insertMember(MEMBER_EVENTID,  HOFFSET(EventData, EVENT_ID),                  H5::PredType::NATIVE_INT);
 mtype_event.insertMember(MEMBER_ENTERIES, HOFFSET(EventData, NUMBER_OF_ENTRIES),         H5::PredType::NATIVE_INT);
-H5::CompType mtype_histories(sizeof(BeamData));
-mtype_histories.insertMember(MEMBER_HISTORIES,  HOFFSET(BeamData, NUMBER_OF_HISTORIES),   H5::PredType::NATIVE_INT);
-mtype_histories.insertMember(MEMBER_Z_STOP,     HOFFSET(BeamData, Z_STOP),               H5::PredType::NATIVE_DOUBLE);
+H5::CompType mtype_beam_data(sizeof(BeamData));
+mtype_beam_data.insertMember(MEMBER_HISTORIES,  HOFFSET(BeamData, NUMBER_OF_HISTORIES),   H5::PredType::NATIVE_INT);
+mtype_beam_data.insertMember(MEMBER_Z_STOP,     HOFFSET(BeamData, Z_STOP),               H5::PredType::NATIVE_DOUBLE);
 H5::DataSpace space(rank, dim);
 H5::DataSpace space_event(rank_event, dim_event);
 H5::DataSpace space_histories(rank_histories, dim_histories);
 H5::H5File *file                 = new H5::H5File( FileName, H5F_ACC_TRUNC	);
 H5::DataSet *dataset             = new H5::DataSet(file->createDataSet(DatasetName, mtype, space));
 H5::DataSet *dataset_event       = new H5::DataSet(file->createDataSet(DatasetName_event, mtype_event, space_event));
-H5::DataSet *dataset_histories   = new H5::DataSet(file->createDataSet(DatasetName_histories, mtype_histories, space_histories));
-myPhspData = new PhspData[myPhspData_Vector.size()];
+H5::DataSet *dataset_histories   = new H5::DataSet(file->createDataSet(DatasetName_histories, mtype_beam_data, space_histories));
 this->NUMBER_OF_PARTICLES = myPhspData_Vector.size();
-for (unsigned int i=0; i<myPhspData_Vector.size(); i++){
-     myPhspData[i]. PART_PDGE    =    myPhspData_Vector[i]. PART_PDGE;
-     myPhspData[i]. PART_WEIGHT  =    myPhspData_Vector[i]. PART_WEIGHT;
-     myPhspData[i]. PART_KINETIC =    myPhspData_Vector[i]. PART_KINETIC;
-     myPhspData[i]. PART_POS_X   =    myPhspData_Vector[i]. PART_POS_X;
-     myPhspData[i]. PART_POS_Y   =    myPhspData_Vector[i]. PART_POS_Y;
-     myPhspData[i]. PART_POS_Z   =    myPhspData_Vector[i]. PART_POS_Z;
-     myPhspData[i]. PART_DIR_X   =    myPhspData_Vector[i]. PART_DIR_X;
-     myPhspData[i]. PART_DIR_Y   =    myPhspData_Vector[i]. PART_DIR_Y;
-     myPhspData[i]. PART_DIR_Z   =    myPhspData_Vector[i]. PART_DIR_Z;
-}
-G4cout<<" pass" <<G4endl;
 this->NUMBER_OF_ACTIVE_EVENTS=myEventData_Vector.size();
-myEventData = new EventData[myEventData_Vector.size()];
-for (unsigned int i=0; i<myEventData_Vector.size(); i++){
-
-myEventData[i].EVENT_ID           =  myEventData_Vector[i].EVENT_ID  ;
-myEventData[i].NUMBER_OF_ENTRIES  =  myEventData_Vector[i].NUMBER_OF_ENTRIES;
-
-} 
-dataset_histories->write(myBeamData, mtype_histories);
-dataset_event ->write(myEventData,  mtype_event);
-dataset->write(myPhspData, mtype);
+dataset_histories->write(myBeamData, mtype_beam_data);
+dataset_event ->write(myEventData_Vector.data(),  mtype_event);
+dataset->write(myPhspData_Vector.data(), mtype);
 
 GetStatistics();
-
-end=clock();
-
 delete   dataset_event;
 delete   dataset_histories;
 delete   dataset;
 delete   file;
-
 }
 catch( FileIException error )
 {
@@ -349,26 +329,27 @@ catch( DataTypeIException error )
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::SUMMARY()
 {
-G4cout<<"SUMMARY()" <<G4endl;
-this->elapsed_time= double(diffclock(end,begin)/1000);
+G4RunManager* runManager = G4RunManager::GetRunManager();
+PhysicsList* pPhysicsList= (PhysicsList*)(runManager->GetUserPhysicsList()); 
+DetectorConstruction * pDetectorConstruction= (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
+int nthread=pDetectorConstruction->NUMBER_OF_THREADS;
+this->elapsed_time= double(diffclock(end,begin)/1000)/((double) nthread);
+G4cout<< "\u21B3"<< " G4LINAC_HEAD-> ELAPSED TIME IS [ " << this->elapsed_time<< " seconds <=> "<< this->elapsed_time/60<< " minutes ]"<<G4endl;     
 time_t theTime= time(NULL);
 struct std::tm* aTime = localtime(&theTime);
 std::ofstream Summary_file;
 this->TOTAL_NUMBER_OF_HISTORIES=myTotalBeamData->NUMBER_OF_HISTORIES;
-G4RunManager* runManager = G4RunManager::GetRunManager();
-PhysicsList* pPhysicsList= (PhysicsList*)(runManager->GetUserPhysicsList()); 
-DetectorConstruction * pDetectorConstruction= (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
+
 bool bremspe_flag=pPhysicsList-> fSplittingActive;
 std::string fileName = pDetectorConstruction->H5_PHASE_SPACE_NAME_WITHOUT_EXTENSION+".summary";
-int nthread=pDetectorConstruction->NUMBER_OF_THREADS;
+
 Summary_file.open(fileName, std::ios::out);
-Summary_file<<"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#"<< G4endl;
-Summary_file<<"G4LINAC_MT v1.O: A GEANT4 BASED APPLICATION FOR MEDICAL LINEAR ACCELERATOR "<< G4endl;
-Summary_file<< "DEVELOPED BY DR. JAAFAR EL BAKKALI, BAHMEDJ@GMAIL.COM, TETOUAN-MOROCCO,  08/ 2017 "<< G4endl;
-Summary_file<<"MULTI_THREADING SUPPORT: YES "<< G4endl;
-Summary_file <<"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#"<< G4endl;
+/*-------------SUMMARY HEADER-------------------*/
+Summary_file<<TERMINAL_HEADER<<G4endl;
+/*-------------SUMMARY HEADER-------------------*/
 Summary_file <<"    @DATE_OF_CREATION: "<<asctime(aTime);   
-Summary_file <<"    @ELAPSED_TIME: "<<this->elapsed_time/(double) nthread<<   " seconds."<<G4endl;       
+Summary_file <<"    @ELAPSED_TIME: "<<this->elapsed_time<<   " seconds."<<G4endl;   
+
 Summary_file <<"    @PHASE_SPACE_NAME: "<<pDetectorConstruction->H5_PHASE_SPACE_NAME_WITHOUT_EXTENSION+".h5"<<G4endl;
 Summary_file <<"    @Z_STOP: " <<this->Z_STOP<<" mm." <<G4endl;
 if (bremspe_flag==true) {
@@ -534,7 +515,6 @@ if (POSITRONS_WEIGHT_MAX > TEMP )  POSITRONS_WEIGHT_MIN  = Weight;
 void RunAction::PROTONS_WEIGHT(G4double Weight )
 {
 G4double TEMP = Weight;
-
 if (PROTON_WEIGHT_MAX <= TEMP )  PROTON_WEIGHT_MAX  = Weight;
 if (PROTON_WEIGHT_MAX > TEMP )   PROTON_WEIGHT_MIN  = Weight;
 /*............................*/ PROTON_WEIGHT_MEAN = PROTON_WEIGHT_MEAN+Weight;
@@ -552,9 +532,9 @@ void RunAction::GetStatistics()
 {// void
 try{ 
 for (unsigned int i=0; i<NUMBER_OF_PARTICLES; i++){
-tmp.PART_KINETIC =  myPhspData[i]. PART_KINETIC;
-tmp.PART_PDGE =     myPhspData[i]. PART_PDGE;
-tmp.PART_WEIGHT =    myPhspData[i]. PART_WEIGHT;
+tmp.PART_KINETIC  =     myPhspData_Vector[i]. PART_KINETIC;
+tmp.PART_PDGE     =     myPhspData_Vector[i]. PART_PDGE;
+tmp.PART_WEIGHT   =     myPhspData_Vector[i]. PART_WEIGHT;
 switch(tmp.PART_PDGE)
 {
 case 22:
@@ -606,7 +586,7 @@ default:
 G4cout <<tmp.PART_PDGE  <<G4endl;
 }
 }
-delete [] myPhspData;
+
 }
  // catch failure caused by the H5File operations
    catch( FileIException error )

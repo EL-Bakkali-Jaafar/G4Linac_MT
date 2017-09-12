@@ -1,91 +1,99 @@
-:P field 10*cm
-:P ssd 100*cm
-:p JAWS_DIM_X 10*cm
-:P theta atan($field/$ssd)/deg
-:p JAWS_DIM_Z 50.
-:p JAWS_DIM_Y 10*cm
-:P JawsX_origin_centre_z 300.
-:P Distance_Source_JawsX ($JawsX_origin_centre_z+$JAWS_DIM_X/2.0)
-:P dx $Distance_Source_JawsX*tan($theta*deg/2.0)
-:P JawsX_Centre_X $JAWS_DIM_X+$dx
-:p JawsY_origin_centre_z 420.
-:P Distance_Source_JawsY ($JawsY_origin_centre_z+$JAWS_DIM_Y/2.0)
-:P dy $Distance_Source_JawsY*tan($theta*deg/2.0)
-:P JawsY_Centre_Y ($JAWS_DIM_Y+$dy)
-:ROTM RM0 0 0 0
-:ROTM RM1 0 $theta*deg 0
-:ROTM RM2  $theta*deg 0 0
-:ROTM RM3 0 -$theta*deg 0
-:ROTM RM4  -$theta*deg 0 0
-:MATE CU521ICRU 29 63.54 8.9333
-:MATE W521ICRU 74 183.85 19.3
+:P FIELD 10*cm
+:P DSP 100*cm
+//WORLD
+:P WORLD_DIM_X 100*cm
+:P WORLD_DIM_Y 100*cm
+:P WORLD_DIM_Z 300*cm
+//TARGET
+:P TARGET_DIM_Z 0.5*cm
+:P TARGET_DIM_Y 4*cm
+:P TARGET_DIM_X 4*cm
 
-:VOLU expHall BOX 50*cm 50*cm 150*cm G4_AIR
-
-:VIS expHall OFF
-
-:P TARGET_THICK 2.5
-
-// Target 
-:VOLU target BOX 2*cm 2*cm $TARGET_THICK G4_Cu
-:COLOR target  1 0 0
-:PLACE target  1 expHall RM0 0.0 0.0 $TARGET_THICK
-
-// Primary collimator
+// PRIMARY_COLLIMATOR
 :P RMAX 10*cm
 :P PC_ZMIN 1.6*cm
 :P PC_ZMAX 7.6*cm
+:p JAWS_DIM_X 10*cm
+:P THETA atan($FIELD/$DSP)/deg
+:p JAWS_DIM_Z 5*cm
+:p JAWS_DIM_Y 10*cm
+:P JAWSX_POSITION_CENTER_Z 30*cm
+:P DISTANCE_SOURCE_JAWSX ($JAWSX_POSITION_CENTER_Z+$JAWS_DIM_X/2.0)
+:P DX $DISTANCE_SOURCE_JAWSX*tan($THETA*deg/2.0)
+:P JAWSX_POSITION_CENTER_X $JAWS_DIM_X+$DX
+:p JAWSY_POSITION_CENTER_Z 40*cm
+:P DISTANCE_SOURCE_JAWSY ($JAWSY_POSITION_CENTER_Z+$JAWS_DIM_Y/2.0)
+:P dy $DISTANCE_SOURCE_JAWSY*tan($THETA*deg/2.0)
+:P JAWSY_POSITION_CENTER_Y ($JAWS_DIM_Y+$dy)
+:ROTM RM0          0           0          0
+:ROTM RM_JAW_X1    0           $THETA*deg 0
+:ROTM RM_JAW_Y1    $THETA*deg  0          0
+:ROTM RM_JAW_X2    0          -$THETA*deg 0
+:ROTM RM_JAW_Y2   -$THETA*deg  0          0
 
-:VOLU "primary collimator_0" TUBE 0 $RMAX ($PC_ZMAX-$PC_ZMIN)/2. G4_W
-:COLOR "primary collimator_0"  0 1 0
-:VOLU "primary collimator_1" CONE 0 4 0 20 ($PC_ZMAX-$PC_ZMIN)/2. G4_AIR
-:COLOR "primary collimator_1"  0.5 0.5 0.5
-:PLACE "primary collimator_0"  1 expHall RM0  0. 0. ($PC_ZMIN+$PC_ZMAX)/2.
-:PLACE "primary collimator_1"  1 "primary collimator_0"  RM0  0. 0. 0. 
+// WORLD
+:VOLU WORLD BOX $WORLD_DIM_X $WORLD_DIM_Y $WORLD_DIM_Z G4_AIR
 
-// Flattening filter
+:VIS WORLD OFF
+
+
+
+// TARGET 
+:VOLU TARGET BOX $TARGET_DIM_X/2.0 $TARGET_DIM_Y/2.0 $TARGET_DIM_Z/2.0 G4_Cu
+:COLOR TARGET  1 0 0
+:PLACE TARGET  1 WORLD RM0 0.0 0.0 $TARGET_DIM_Z/2.0
+
+//PRIMARY COLLIMATOR
+:VOLU "PRIMARY_COLLIMATOR_0" TUBE 0 $RMAX ($PC_ZMAX-$PC_ZMIN)/2. G4_W
+:COLOR "PRIMARY_COLLIMATOR_0"  0 1 0
+:VOLU "PRIMARY_COLLIMATOR_1" CONE 0 4 0 20 ($PC_ZMAX-$PC_ZMIN)/2. G4_AIR
+:COLOR "PRIMARY_COLLIMATOR_1"  0.5 0.5 0.5
+:PLACE "PRIMARY_COLLIMATOR_0"  1 WORLD RM0  0. 0. ($PC_ZMIN+$PC_ZMAX)/2.
+:PLACE "PRIMARY_COLLIMATOR_1"  1 "PRIMARY_COLLIMATOR_0"  RM0  0. 0. 0. 
+
+// FLATTENING FILTER
 :MIXT SiFeMn 8. 3 
        G4_Si 1./3.
        G4_Fe 1./3.
        G4_Mn 1./3.
 
-:VOLU "flattening filter" POLYCONE 0. 360.*deg 5
+:VOLU "FLATTENING_FILTER" POLYCONE 0. 360.*deg 5
  0. 0. 1.25
  10. 0. 9.
  17. 0. 13.8
  17. 0. 27.8
  18. 0. 27.8
 SiFeMn
-:PLACE "flattening filter" 0 expHall RM0 0. 0. 8.*cm
+:PLACE "FLATTENING_FILTER" 0 WORLD RM0 0. 0. 8.*cm
 
-// Monitor
-:VOLU monitor TUBE 0. 100. 15. G4_AIR
-:PLACE monitor 1 expHall RM0 0. 0. 150. 
-
-
-// Detector
-:VOLU Detector BOX 200 200. 5. G4_AIR
-:PLACE Detector 1 expHall RM0 0. 0. 1005
-
-// Jaws
-
-:VOLU jaws_X1 BOX 10*cm 10*cm 5*cm G4_W 
-:COLOR jaws_X1  1 0 1
-:PLACE jaws_X1 1 expHall RM1 -$JawsX_Centre_X 0. 300.
+// MONITOR
+:VOLU MONITOR TUBE 0. 100. 15. G4_AIR
+:PLACE MONITOR 1 WORLD RM0 0. 0. 150. 
 
 
-:VOLU jaws_X2 BOX 10*cm 10*cm 5*cm G4_W 
-:COLOR jaws_X2  1 0 1
-:PLACE jaws_X2 1 expHall RM3 $JawsX_Centre_X 0. 300.
+// DETECTOR
+:VOLU DETECTOR BOX 200 200. 5. G4_AIR
+:PLACE DETECTOR 1 WORLD RM0 0. 0. 100.5*cm
+
+// JAWS
+
+:VOLU JAWS_X1 BOX 10*cm 10*cm 5*cm G4_W 
+:COLOR JAWS_X1  1 0 1
+:PLACE JAWS_X1 1 WORLD RM_JAW_X1 -$JAWSX_POSITION_CENTER_X 0. 300.
+
+
+:VOLU JAWS_X2 BOX 10*cm 10*cm 5*cm G4_W 
+:COLOR JAWS_X2  1 0 1
+:PLACE JAWS_X2 1 WORLD RM_JAW_X2 $JAWSX_POSITION_CENTER_X 0. 300.
 
 
 
-:VOLU jaws_Y1 BOX 10*cm 10*cm 5*cm G4_W 
-:COLOR jaws_Y1  1 0 1
-:PLACE jaws_Y1 1 expHall RM2 0. $JawsY_Centre_Y  420.
+:VOLU JAWS_Y1 BOX 10*cm 10*cm 5*cm G4_W 
+:COLOR JAWS_Y1  1 0 1
+:PLACE JAWS_Y1 1 WORLD RM_JAW_Y1 0. $JAWSY_POSITION_CENTER_Y  420.
 
-:VOLU jaws_Y2 BOX 10*cm 10*cm 5*cm G4_W 
-:COLOR jaws_Y2  1 0 1
-:PLACE jaws_Y2 1 expHall RM4 0. -$JawsY_Centre_Y  420.
+:VOLU JAWS_Y2 BOX 10*cm 10*cm 5*cm G4_W 
+:COLOR JAWS_Y2  1 0 1
+:PLACE JAWS_Y2 1 WORLD RM_JAW_Y2 0. -$JAWSY_POSITION_CENTER_Y  420.
 
 

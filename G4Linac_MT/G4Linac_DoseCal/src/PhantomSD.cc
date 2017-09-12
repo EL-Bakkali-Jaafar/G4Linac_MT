@@ -108,7 +108,7 @@ PhantomSD::PhantomSD(G4String name )
 INCREMENTOR=0;
 auto str = std::to_string(G4Threading::G4GetThreadId())+"_"; 
 G4RunManager* runManager = G4RunManager::GetRunManager();
-DetectorConstruction * pDetectorConstruction = (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
+this->pDetectorConstruction = (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
 this->Total_Events_To_Be_Processed= runManager->GetNumberOfEventsToBeProcessed();
 
 this-> NumberOfThreads=pDetectorConstruction-> NUMBER_OF_THREADS;
@@ -158,9 +158,9 @@ this->Voxels[ix][iy][iz].rsd=0.;
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 PhantomSD::~PhantomSD()
 {
-delete this->Voxels;
-delete[] myDosimetricData;
-delete[] myPhantomData;
+//delete this->Voxels;
+//delete[] myDosimetricData;
+//delete[] myPhantomData;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 G4bool PhantomSD::ProcessHits(G4Step* aStep,G4TouchableHistory*)
@@ -188,7 +188,6 @@ DOSE=ENERGY_DEPOSIT/this->VoxelMass;
 this->Voxels[i][j][k].absorbed_dose+=DOSE/(MeV/g);
 this->Voxels[i][j][k].absorbed_dose2+=(DOSE/(MeV/g)*DOSE/(MeV/g));
 this->Voxels[i][j][k].nEvents++;
-G4double events = this->Voxels[i][j][k].nEvents;
 this->NumberTotalEvents++;
 }
 return true;
@@ -198,7 +197,7 @@ void PhantomSD::EndOfEvent(G4HCofThisEvent*)
 {
 G4RunManager* runManager         = G4RunManager::GetRunManager();
 const G4Event * event            =   runManager->GetCurrentEvent();
-int Total_Events_To_Be_Processed = runManager->GetNumberOfEventsToBeProcessed();
+this->Total_Events_To_Be_Processed = runManager->GetNumberOfEventsToBeProcessed();
 G4int event_id                   =   event->GetEventID();
 if(event_id==0){
 //Master Voxels
@@ -304,9 +303,8 @@ void PhantomSD::SaveDataInTextFile(){
 
 G4RunManager* runManager = G4RunManager::GetRunManager();
 
-DetectorConstruction * pDetectorConstruction = (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
+this->pDetectorConstruction = (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
 this->Total_Events_To_Be_Processed= runManager->GetNumberOfEventsToBeProcessed();
-G4cout<<"this->Total_Events_To_Be_Processed " <<this->Total_Events_To_Be_Processed<<G4endl; 
 
 if (pDetectorConstruction->GeneratorFlag==2){
 
@@ -334,9 +332,9 @@ void PhantomSD::SaveDataInBinaryFile(){
 
 G4RunManager* runManager = G4RunManager::GetRunManager();
 
-DetectorConstruction * pDetectorConstruction = (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
+this->pDetectorConstruction = (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
 this->Total_Events_To_Be_Processed= runManager->GetNumberOfEventsToBeProcessed();
-G4cout<<"this->Total_Events_To_Be_Processed " <<this->Total_Events_To_Be_Processed<<G4endl; 
+
 
 if (pDetectorConstruction->GeneratorFlag==2){
 
@@ -349,13 +347,9 @@ if (pDetectorConstruction->GeneratorFlag==2){
 
 }
 int ix,iy,iz;
-
 G4ThreadLocal fstream fs;
 fs.open("dose.dat", ios::out | ios::binary );
-
 G4ThreadLocal DosCalData _DosCalData ;
-G4cout<<"this->Total_Events" <<this->Total_Events<<G4endl;
-
 G4cout<<"\033[36m"<<"G4Linac_Dosecal: Total Events Processed: "<<this->Total_Events<<G4endl;
 for(ix=0; ix<NumberOfVoxelsAlongX; ix++){
 for(iy=0; iy<NumberOfVoxelsAlongY; iy++){

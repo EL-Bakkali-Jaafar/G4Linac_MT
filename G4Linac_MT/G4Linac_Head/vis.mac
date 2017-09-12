@@ -5,9 +5,9 @@
 # set the name of h5phase space file
 /Parameters/H5PhaseSpaceName Phase_Space
 # if you need to load geometry from a macro file switch false to true
-/Parameters/UseGeomFromText false
+/Parameters/UseGeomFromText true
 # set the name of macro file that contains geometry description
-/Parameters/NameOfGeomFromTextFile file.geom
+/Parameters/NameOfGeomFromTextFile linac.geom
 
 # define cut production for positron
 /Physics/setPCut 0.1 mm

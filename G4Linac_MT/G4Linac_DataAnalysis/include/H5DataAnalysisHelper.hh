@@ -53,8 +53,8 @@ int      GetNumberOfParticle();
 int      GetNumberOfVoxelsAlongX();
 int      GetNumberOfVoxelsAlongY();
 int      GetNumberOfVoxelsAlongZ();
-int      data_size_PhspData;
-int      data_size;
+unsigned int      data_size_PhspData;
+unsigned int      data_size;
 double   GetPhantomsizeX();
 double   GetPhantomsizeY();
 double   GetPhantomsizeZ();
@@ -80,9 +80,9 @@ G4double GetMaxKineticEnergy(int);
 G4double GetKineticEnergy(int ,int);
 typedef struct
 {
-int   NUMBER_VOXELS_ALONG_X,NUMBER_VOXELS_ALONG_Y,NUMBER_VOXELS_ALONG_Z;
+unsigned int   NUMBER_VOXELS_ALONG_X,NUMBER_VOXELS_ALONG_Y,NUMBER_VOXELS_ALONG_Z;
 double  PHANTOM_SIZE_X,PHANTOM_SIZE_Y,PHANTOM_SIZE_Z;
-int  
+unsigned int  
 VOXEL_XID,
 VOXEL_YID,
 VOXEL_ZID;
@@ -130,7 +130,7 @@ double  DOSE,
 
 typedef struct
 {
-int   NUMBER_VOXELS_ALONG_X,
+unsigned int   NUMBER_VOXELS_ALONG_X,
         NUMBER_VOXELS_ALONG_Y,
         NUMBER_VOXELS_ALONG_Z;
 double PHANTOM_SIZE_X,
@@ -146,7 +146,7 @@ G4double PHANTOM_SIZE_X,PHANTOM_SIZE_Y,PHANTOM_SIZE_Z;
 private:
 std::string DosimetricDataFileName, 
             PhaseSpaceFileName;
-int data_size_DosimetricData;
+unsigned int data_size_DosimetricData;
 
 };
 #endif

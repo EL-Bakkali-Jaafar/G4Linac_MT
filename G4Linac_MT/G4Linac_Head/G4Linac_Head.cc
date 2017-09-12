@@ -109,11 +109,11 @@ delete ui;
 #ifdef G4VIS_USE
 delete visManager;
 #endif
-#ifdef G4MULTITHREADED
+
 if (runManager){
 delete runManager;
 }
-#endif
+
 return 0;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/

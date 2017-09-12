@@ -92,9 +92,6 @@ pDetectorMessenger= new DetectorMessenger(this);
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 DetectorConstruction::~DetectorConstruction()
 { 
-delete RAM_PhspData;
-delete RAM_EventData;
-delete myBeamData;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void DetectorConstruction::SetNumberOfEventsPerThread( int _NumberOfEventsPerThread)
@@ -133,17 +130,16 @@ volmgr->AddTextFile(filename);
 // Read the text files and construct the GEANT4 geometry
 //------------------------------------------------
 G4VPhysicalVolume* physiWorld = volmgr->ReadAndConstructDetector();
-G4cout<<"  construct Geant4 geometry"<<G4endl;
-//volmgr -> DumpSummary();
+
 
 DetectorROGeometry* RO = (DetectorROGeometry*) GetParallelWorld(0);
-RO->Initialize(this->ReadOutGeometryCenterPosition ,
-                     GetVoxalizedPhantomSizeX()/2           ,
-                     GetVoxalizedPhantomSizeY()/2           ,
-                     GetVoxalizedPhantomSizeZ()/2           ,
-                     GetNumberOfVoxelsAlongX()     ,
-                     GetNumberOfVoxelsAlongY()     ,
-                     GetNumberOfVoxelsAlongZ())    ;
+RO->Initialize(this->ReadOutGeometryCenterPosition                ,
+                     GetVoxalizedPhantomSizeX()/2                 ,
+                     GetVoxalizedPhantomSizeY()/2                 ,
+                     GetVoxalizedPhantomSizeZ()/2                 ,
+                     GetNumberOfVoxelsAlongX()                    ,
+                     GetNumberOfVoxelsAlongY()                    ,
+                     GetNumberOfVoxelsAlongZ())                   ;
     
 
 RO->UpdateROGeometry();  
@@ -166,17 +162,7 @@ READ_EVENT_DATA();
 READ_PHSP_DATA();
 }
 return this->physWorld;
-}
-}
-/*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
-/*
-void DetectorConstruction::ConstructSDandField() 
-{
-// 
-fConstructedSDandField = true;
-SetupDetectors(); 
-}
-*/
+}}
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void DetectorConstruction::SetupGeometry(){  
 // Get nist material manager
@@ -185,26 +171,23 @@ G4NistManager* nist = G4NistManager::Instance();
 G4double world_sizeXY           = 2*m;
 G4double world_sizeZ            = 2*m;
 G4double detector_size          = 20*cm;
-phantom_mat         = nist->FindOrBuildMaterial("G4_WATER");// Tungesten
-G4Material* world_mat           = nist->FindOrBuildMaterial("G4_Galactic");//Vacum
+phantom_mat         = nist->FindOrBuildMaterial("G4_WATER");
+G4Material* world_mat           = nist->FindOrBuildMaterial("G4_Galactic");
 solidWorld               = new G4Box("World", 0.5*world_sizeXY, 0.5*world_sizeXY, 0.5*world_sizeZ);      
 logicWorld     = new G4LogicalVolume(solidWorld, world_mat, "logicWorld");
 logicWorld->SetVisAttributes(G4VisAttributes::GetInvisible());
 this->physWorld   = new G4PVPlacement(0, G4ThreeVector(),logicWorld,"World",  0, false,0,false);                     
-// 
 solidDetector            = new G4Box("Detector", 0.5*detector_size , 0.5*detector_size,  0.5*detector_size);      
- //
 logicdDetector = new G4LogicalVolume(solidDetector,phantom_mat,  "logicdDetector");
-//
 pDetector    = new G4PVPlacement(0,  G4ThreeVector(0.0,0.0,20*cm), logicdDetector,  "pDetector", logicWorld,false,  0, false);
 DetectorROGeometry* RO = (DetectorROGeometry*) GetParallelWorld(0);
-RO->Initialize(this->ReadOutGeometryCenterPosition ,
+RO->Initialize(this->ReadOutGeometryCenterPosition          ,
                      GetVoxalizedPhantomSizeX()/2           ,
                      GetVoxalizedPhantomSizeY()/2           ,
                      GetVoxalizedPhantomSizeZ()/2           ,
-                     GetNumberOfVoxelsAlongX()     ,
-                     GetNumberOfVoxelsAlongY()     ,
-                     GetNumberOfVoxelsAlongZ())    ;
+                     GetNumberOfVoxelsAlongX()              ,
+                     GetNumberOfVoxelsAlongY()              ,
+                     GetNumberOfVoxelsAlongZ())             ;
     
 
 RO->UpdateROGeometry();    
@@ -318,7 +301,7 @@ void DetectorConstruction::READ_PHSP_DATA(){
 H5File file( this->H5PhaseSpaceFileName, H5F_ACC_RDONLY );
 DataSet dataset = file.openDataSet( DatasetName );
 H5::CompType mtype2( sizeof(PhspData) );
-G4int data_size  = dataset.getSpace().getSimpleExtentNpoints();
+int data_size  = dataset.getSpace().getSimpleExtentNpoints();
     RAM_PhspData    = new PhspData[data_size];
     mtype2.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),   H5::PredType::NATIVE_DOUBLE);
     mtype2.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),    H5::PredType::NATIVE_DOUBLE);

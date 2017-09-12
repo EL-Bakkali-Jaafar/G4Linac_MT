@@ -246,29 +246,11 @@ H5::H5File *file                 = new H5::H5File(H5_PHASE_SPACE_FILE_NAME, H5F_
 H5::DataSet *dataset             = new H5::DataSet(file->createDataSet(DatasetName, mtype, space));
 H5::DataSet *dataset_event       = new H5::DataSet(file->createDataSet(DatasetName_event, mtype_event, space_event));
 H5::DataSet *dataset_histories   = new H5::DataSet(file->createDataSet(DatasetName_histories, mtype_histories, space_histories));
-myPhspData = new PhspData[myPhspData_vector.size()];
-for (unsigned int i=0; i<myPhspData_vector.size(); i++){
-     myPhspData[i]. PART_PDGE    =    myPhspData_vector[i]. PART_PDGE;
-     myPhspData[i]. PART_WEIGHT  =    myPhspData_vector[i]. PART_WEIGHT;
-     myPhspData[i]. PART_KINETIC =    myPhspData_vector[i]. PART_KINETIC;
-     myPhspData[i]. PART_POS_X   =    myPhspData_vector[i]. PART_POS_X;
-     myPhspData[i]. PART_POS_Y   =    myPhspData_vector[i]. PART_POS_Y;
-     myPhspData[i]. PART_POS_Z   =    myPhspData_vector[i]. PART_POS_Z;
-     myPhspData[i]. PART_DIR_X   =    myPhspData_vector[i]. PART_DIR_X;
-     myPhspData[i]. PART_DIR_Y   =    myPhspData_vector[i]. PART_DIR_Y;
-     myPhspData[i]. PART_DIR_Z   =    myPhspData_vector[i]. PART_DIR_Z;
-}
-myEventData = new EventData[myEventData_vector.size()];
-for (unsigned int i=0; i<myEventData_vector.size(); i++){
 
-     myEventData[i].EVENT_ID           = myEventData_vector[i].EVENT_ID  ;
-     myEventData[i].NUMBER_OF_ENTRIES  =  myEventData_vector[i].NUMBER_OF_ENTRIES;
-} 
 dataset_histories->write(myBeamData, mtype_histories);
-dataset_event ->write(myEventData,  mtype_event);
-dataset->write(myPhspData, mtype);
-delete [] myPhspData;
-delete [] myEventData;
+
+dataset_event ->write(myEventData_vector.data(),  mtype_event);
+dataset->write(myPhspData_vector.data(), mtype);
 delete   dataset_event;
 delete   dataset_histories;
 delete   dataset;

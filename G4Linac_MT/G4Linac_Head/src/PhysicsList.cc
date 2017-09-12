@@ -164,15 +164,6 @@ void PhysicsList::ConstructEM()
   G4ParticleDefinition* particle = theParticleIterator->value();
   G4double highEnergyLimit = 24*MeV;
   G4String particleName = particle->GetParticleName();
-
-    // Tip:
-    // G4ProcessManager::AddProcess(G4VProcess*, 
-    //                              G4int ordAtRestDoIt, 
-    //                              G4int ordAlongStepDoIt, 
-    //                              G4int ordPostStepDoIt);
-    // Integers in AddProcess() indicate the order in which the process 
-    // is applied. If value is negative, the process is not added to 
-    // the corresponding process vector.
     
    if (particleName == "gamma") {
 

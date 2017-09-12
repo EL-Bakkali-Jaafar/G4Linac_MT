@@ -127,24 +127,15 @@ SET_First_ID_Of_Event_In_Thread(anEvent->GetEventID());
 AUTORIZED=true;
 //_____________________________________________________________________________________________
 
-
 Local_ITERATOR++;
-
-//// recycling phase space
+// recycling phase space
 
 if (Local_ITERATOR== this-> NUMBER_OF_SIMULATED_HISTORIES-1) 
 {Local_ITERATOR=0;
-//G4cout<<"Phase space recycled "<<NUMBER_OF_TIME_OF_REUSE_PHASE_SPACE_FILE++<<" times"<< " in thread ID : " <<  id_thread  <<G4endl;
-
 }
 
-//Event_ID                =   this->First_ID_Of_Event_In_Thread+Local_ITERATOR;
-//
-//if (Local_ITERATOR==pDetectorConstruction->RAM_EventData[phsp_event_id].EVENT_ID)
 {
 Number_of_Entries       =    pDetectorConstruction->RAM_EventData[phsp_event_id].NUMBER_OF_ENTRIES;
-//G4cout<<"Number_of_Entries " <<Number_of_Entries <<G4endl;
-//G4cout<<"Event_ID " <<Event_ID <<G4endl;
 switch (this->EVENT_GENERATION_FLAG)
 {
 case 0:
@@ -218,9 +209,6 @@ void G4UserH5PhaseSpaceReader:: GENERATE_NEW_PART_SPLITTING(int ITERATOR,G4Event
 
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 void G4UserH5PhaseSpaceReader:: GENERATE_NEW_PART_ROT_SPLITTING(int ITERATOR,G4Event*& anEvent){
-
-
-
     this->energy           *=MeV;
     this->pos_x            *=mm;
     this->pos_y            *=mm;
@@ -368,15 +356,10 @@ void G4UserH5PhaseSpaceReader::SET_PHASE_SPACE_FILE_NAME( G4String _FileName)
      }
      else {
      }
-
  }
-
-
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 void G4UserH5PhaseSpaceReader::SET_EVENT_GENERATION_FLAG(G4int FLAG){
-
 this->EVENT_GENERATION_FLAG= FLAG;
-
 }
 
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
@@ -388,3 +371,4 @@ if (_CHANGE_Z_STOP_VALUE==true)  SET_Z_PLANE( _Z_STOP,  true ) ;
 SET_EVENT_GENERATION_FLAG( _EVENT_GENERATION_FLAG);
 this-> SPLITTING_FACTOR=_SPLITTING_FACTOR;
 }
+/*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/

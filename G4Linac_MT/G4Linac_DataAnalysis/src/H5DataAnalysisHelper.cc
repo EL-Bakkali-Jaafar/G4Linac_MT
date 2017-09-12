@@ -85,14 +85,9 @@ const std::string MEMBER_PHANTOM_SIZE_Z("_PHANTOM_SIZE_Z");
 
 
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
-
 H5DataAnalysisHelper::H5DataAnalysisHelper()
-
-
 {
-
 }
-
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 G4double H5DataAnalysisHelper::GetTheta(int id,int part_pdge){
 
@@ -103,16 +98,14 @@ if (RAM_PhspData[id].PART_PDGE==part_pdge){
 _theta=std::acos(std::abs(RAM_PhspData[id].PART_DIR_Z));
  return _theta ;
 }
-
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 G4double H5DataAnalysisHelper::GetMaxTheta(int part_pdge)
 {
-	G4double  max_dir_z=0 , dir_z=0;
-
+G4double  max_dir_z=0 , dir_z=0;
 max_dir_z*=deg;
 dir_z*=deg;
- for (unsigned int i=0 ; i< data_size_PhspData ;i++) {
+for (unsigned int i=0 ; i< data_size_PhspData ;i++) {
 
 dir_z= GetTheta(i,part_pdge);
 
@@ -121,9 +114,7 @@ if (  max_dir_z <=dir_z) {  max_dir_z =dir_z;}
 }
 return max_dir_z;
 
-
 }
-
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 G4double H5DataAnalysisHelper::GetMinTheta(int part_pdge)
 {
@@ -140,96 +131,56 @@ if (incr==0){min_dir_z= GetTheta(i, part_pdge);};
 dir_z=GetTheta(i,part_pdge);
 
 if ( min_dir_z >=dir_z) {min_dir_z =dir_z;}
-
 }
-
-
 return min_dir_z;
-
-
-
 }
 
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 G4double H5DataAnalysisHelper::GetPosX(int id,int part_pdge){
-
-
-
-
-
 if  (part_pdge==0) { 
-
  return RAM_PhspData[id].PART_POS_X;
-
 } else 
 if (part_pdge!=0){
-
 if (RAM_PhspData[id].PART_PDGE==part_pdge)
 {
  return RAM_PhspData[id].PART_POS_X;
-
 }
  else { return 0;}
-
 }
-
-
-
-
-
 }
 
 
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 G4double H5DataAnalysisHelper::GetPosY(int id,int part_pdge){
-
-
 if  (part_pdge==0) { 
-
  return RAM_PhspData[id].PART_POS_Y;
-
 } else 
 if (part_pdge!=0){
-
 if (RAM_PhspData[id].PART_PDGE==part_pdge)
 {
  return RAM_PhspData[id].PART_POS_Y;
-
 }
  else { return 0;}
-
 }
-
-
-
-
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
  G4double H5DataAnalysisHelper::GetMaxPosX(int part_pdge)
 {
 	G4double  max_pos_x=0 , pos_x=0;
-
-
  for (unsigned int i=0 ; i< data_size_PhspData ;i++) {
 pos_x= GetPosX(i,part_pdge);
 if (  max_pos_x <=pos_x) {  max_pos_x=pos_x;}
-
 }
-
 return max_pos_x;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 G4double H5DataAnalysisHelper::GetMaxPosY(int part_pdge)
 {
 	G4double  max_pos_y=0 , pos_y=0;
-
-
  for (unsigned int i=0 ; i< data_size_PhspData ;i++) {
 pos_y= GetPosY(i,part_pdge);
 if (  max_pos_y <=pos_y) {  max_pos_y=pos_y;}
-
 }
-
 return max_pos_y;
 }
 
@@ -249,29 +200,22 @@ pos_y=GetPosY(i,part_pdge);
 if ( min_pos_y >=pos_y) {min_pos_y=pos_y;}
 
 }
-
 return min_pos_y;
 }
-
-
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 
 G4double H5DataAnalysisHelper::GetMinPosX(int part_pdge)
 {
 	G4double  min_pos_x=0 , pos_x=0;
 int incr=-1;
-
  for (unsigned int i=0 ; i< data_size_PhspData ;i++) {
 pos_x= GetPosX(i,part_pdge);
-
 incr++;
 if (incr==0){min_pos_x= GetPosX(i,part_pdge);};
 pos_x=GetPosX(i,part_pdge);
 
 if ( min_pos_x >=pos_x) {min_pos_x=pos_x;}
-
 }
-
 return min_pos_x;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
@@ -304,18 +248,19 @@ G4double H5DataAnalysisHelper::GetMinKineticEnergy(int part_pdge)
 int incr=-1;
 
  for (unsigned int i=0 ; i< data_size_PhspData ;i++) {
-if (GetKineticEnergy(i,part_pdge!=-1)) KineticEnergy= GetKineticEnergy(i,part_pdge);
+if (GetKineticEnergy(i,part_pdge)!=0) KineticEnergy= GetKineticEnergy(i,part_pdge);
 
 incr++;
-if (incr==0){
+if (incr==0)
+{
 
 
-if (GetKineticEnergy(i,part_pdge!=-1)) min_KineticEnergy= GetKineticEnergy(i,part_pdge);
-
+if (GetKineticEnergy(i,part_pdge)!=0) min_KineticEnergy= GetKineticEnergy(i,part_pdge);
 
 };
 
-if (GetKineticEnergy(i,part_pdge!=-1))  KineticEnergy=GetKineticEnergy(i, part_pdge);
+
+if (GetKineticEnergy(i,part_pdge)!=0) KineticEnergy=GetKineticEnergy(i, part_pdge);
 
 if ( min_KineticEnergy >=KineticEnergy) {min_KineticEnergy=KineticEnergy;}
 
@@ -487,8 +432,6 @@ if (  min_dose >=dose) { min_dose=dose;}
 }
       }
 
-   
-
     return min_dose;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
@@ -511,9 +454,6 @@ if (  min_dose >=dose) { min_dose=dose;}
 
 }
       }
-
-   
-
     return min_dose;
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
@@ -560,17 +500,12 @@ double H5DataAnalysisHelper::GetPhantomsizeZ(){
 
 H5DataAnalysisHelper::~H5DataAnalysisHelper()
 {
-   // 
-
-
 }
 
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 
 void H5DataAnalysisHelper::READ_EVENT_DATA()
  {
-
-
    H5File file( this->PhaseSpaceFileName, H5F_ACC_RDONLY );
 
     DataSet dataset_event = file.openDataSet( DatasetName_event );
@@ -591,8 +526,7 @@ void H5DataAnalysisHelper::SET_DOSIMETRIC_FILE_NAME( std::string _FileName)
  this->DosimetricDataFileName=_FileName;
 
  }
-
-
+/*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 void H5DataAnalysisHelper::SET_PHASE_SPACE_FILE_NAME( std::string _FileName)
 
  {
@@ -603,56 +537,32 @@ void H5DataAnalysisHelper::SET_PHASE_SPACE_FILE_NAME( std::string _FileName)
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 
  void H5DataAnalysisHelper::READ_DOSIMETRIC_DATA_FROM_BINARY_FILE(){
-
-
-
 // Read data
  std::fstream binary_file(this->DosimetricDataFileName,std::ios::binary|std::ios::in| std::ios::ate );
  int size = binary_file.tellg();
 this->RAM_DosimetricData = new DosimetricData[size];
 RAM_PhantomData = new PhantomData[1];
 data_size_DosimetricData= size/sizeof(DosCalData);
-        DosCalData _DosCalData;
+DosCalData _DosCalData;
     for(int i = 0; i<size/sizeof(DosCalData); i++)
     { 
-
         binary_file.seekg(i*sizeof(DosCalData));
         binary_file.read(reinterpret_cast<char *>(&_DosCalData),sizeof(DosCalData));
-
 this->RAM_DosimetricData[i].VOXEL_ZID=_DosCalData.VOXEL_ZID;
 this->RAM_DosimetricData[i].VOXEL_YID=_DosCalData.VOXEL_YID;
 this->RAM_DosimetricData[i].VOXEL_XID=_DosCalData.VOXEL_XID;
 this->RAM_DosimetricData[i].RSD=_DosCalData.RSD;
 this->RAM_DosimetricData[i].DOSE=_DosCalData.DOSE;
-
-    }
-
-
-
-RAM_PhantomData[0].NUMBER_VOXELS_ALONG_X=_DosCalData.NUMBER_VOXELS_ALONG_X;
-
-RAM_PhantomData[0].NUMBER_VOXELS_ALONG_Y=_DosCalData.NUMBER_VOXELS_ALONG_Y;
-
-RAM_PhantomData[0].NUMBER_VOXELS_ALONG_Z=_DosCalData.NUMBER_VOXELS_ALONG_Z;
-
-RAM_PhantomData[0].PHANTOM_SIZE_X=_DosCalData.PHANTOM_SIZE_X;
-
-RAM_PhantomData[0].PHANTOM_SIZE_Y=_DosCalData.PHANTOM_SIZE_Y;
-
-RAM_PhantomData[0].PHANTOM_SIZE_Z=_DosCalData.PHANTOM_SIZE_Z;
-//
-
-
-    binary_file.close();
-
-
-
-
-
-
-
 }
-
+RAM_PhantomData[0].NUMBER_VOXELS_ALONG_X=_DosCalData.NUMBER_VOXELS_ALONG_X;
+RAM_PhantomData[0].NUMBER_VOXELS_ALONG_Y=_DosCalData.NUMBER_VOXELS_ALONG_Y;
+RAM_PhantomData[0].NUMBER_VOXELS_ALONG_Z=_DosCalData.NUMBER_VOXELS_ALONG_Z;
+RAM_PhantomData[0].PHANTOM_SIZE_X=_DosCalData.PHANTOM_SIZE_X;
+RAM_PhantomData[0].PHANTOM_SIZE_Y=_DosCalData.PHANTOM_SIZE_Y;
+RAM_PhantomData[0].PHANTOM_SIZE_Z=_DosCalData.PHANTOM_SIZE_Z;
+    binary_file.close();
+}
+/*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 void H5DataAnalysisHelper::READ_BEAM_DATA()
  {
      const std::string FileName( this->PhaseSpaceFileName);
@@ -663,11 +573,9 @@ void H5DataAnalysisHelper::READ_BEAM_DATA()
      mtype_histories.insertMember(MEMBER_Z_STOP,        HOFFSET(BeamData, Z_STOP),                 PredType::NATIVE_DOUBLE);
      dataset_histories.read( RAM_BeamData, mtype_histories );
  }
-
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 void H5DataAnalysisHelper::READ_PHASE_SPACE_DATA()
 {
-
   // LOAD PHASE SPACE HDF5-BASED FORMAT FILE
      H5File file(  this->PhaseSpaceFileName, H5F_ACC_RDONLY );
      DataSet dataset = file.openDataSet( DatasetName_Phsp );
@@ -675,7 +583,6 @@ void H5DataAnalysisHelper::READ_PHASE_SPACE_DATA()
     // GET NUMBER OF DATA IN DATASET NAMED PhspData
      data_size_PhspData  = dataset.getSpace().getSimpleExtentNpoints();
     RAM_PhspData = new PhspData[data_size_PhspData];
-
     mtype2.insertMember(MEMBER_PART_WEIGHT,  HOFFSET(PhspData, PART_WEIGHT),  PredType::NATIVE_DOUBLE);
     mtype2.insertMember(MEMBER_PART_POS_X,   HOFFSET(PhspData, PART_POS_X),   PredType::NATIVE_DOUBLE);
     mtype2.insertMember(MEMBER_PART_PDGE,    HOFFSET(PhspData, PART_PDGE),    PredType::NATIVE_INT);
@@ -686,8 +593,6 @@ void H5DataAnalysisHelper::READ_PHASE_SPACE_DATA()
     mtype2.insertMember(MEMBER_PART_DIR_Z,   HOFFSET(PhspData, PART_DIR_Z),   PredType::NATIVE_DOUBLE);
     mtype2.insertMember(MEMBER_PART_KINETIC, HOFFSET(PhspData, PART_KINETIC), PredType::NATIVE_DOUBLE);
     dataset.read( RAM_PhspData, mtype2 );
-
 }
-
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 

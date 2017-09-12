@@ -25,8 +25,9 @@
 #set the center position of readout geometry, default: center position of phantom
 /Parameters/ROGcenterPos 0 0 20 cm
 #set verbosity
-/control/verbose 1
-/run/verbose 2
+/control/verbose 0
+/run/verbose 0
+/hits/verbose 0
 /event/verbose 0
 # initializing 
 /Parameters/UseGeomFromText false

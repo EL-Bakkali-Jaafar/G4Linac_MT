@@ -48,15 +48,11 @@ class G4Material;
 class G4Box;
 class G4tgrMessenger;
 class   DetectorMessenger;
-
-/// Detector construction class to define materials and geometry.
-
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
     DetectorConstruction( int NUMBER_OF_THREADS);
     virtual ~DetectorConstruction();
-  //virtual void ConstructSDandField();
     virtual G4VPhysicalVolume* Construct();
     void SetNumberOfVoxelsAlongX(int );
     void SetNumberOfVoxelsAlongY(int );
@@ -120,13 +116,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4bool             fConstructed;
     G4VPhysicalVolume* pDetector ;
     static G4ThreadLocal G4bool fConstructedSDandField;
-  DetectorMessenger * pDetectorMessenger;
-G4tgrMessenger * messenger; 
-int Nsplit,GeneratorFlag,NumberOfEventsPerThread;
-    typedef struct
+   DetectorMessenger * pDetectorMessenger;
+   G4tgrMessenger * messenger; 
+   int Nsplit,GeneratorFlag,NumberOfEventsPerThread;
+
+   typedef struct
     {
-       int    PART_PDGE;
-       double  PART_WEIGHT
+       int       PART_PDGE;
+       double    PART_WEIGHT
                 ,PART_POS_X
                 ,PART_POS_Y
                 ,PART_POS_Z
@@ -140,7 +137,7 @@ int Nsplit,GeneratorFlag,NumberOfEventsPerThread;
 
      typedef struct
      {
-         int    EVENT_ID,
+         int      EVENT_ID,
                   NUMBER_OF_ENTRIES;
 
 
@@ -152,14 +149,13 @@ int Nsplit,GeneratorFlag,NumberOfEventsPerThread;
    G4double    Z_STOP;
 
   }BeamData;
- //
   PhspData *RAM_PhspData;
   EventData *RAM_EventData;
-  //
   BeamData  myBeamData[1];
 };
 
-/*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
+
 
 #endif
+/*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 

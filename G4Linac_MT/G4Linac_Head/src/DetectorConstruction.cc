@@ -77,7 +77,7 @@ DetectorConstruction::DetectorConstruction()
 : G4VUserDetectorConstruction(),mSD(0)
 {
  pDetectorMessenger= new DetectorMessenger(this);
- origin=-50*cm;
+
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void DetectorConstruction::SetNumberOfEventsPerThread(int _NumberOfEventsPerThread){
@@ -97,7 +97,7 @@ this->use_geom_from_text=_flag;
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 DetectorConstruction::~DetectorConstruction()
 { 
-G4AutoDelete::Register(mSD);
+
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 G4VPhysicalVolume* DetectorConstruction::Construct(){
@@ -115,11 +115,11 @@ this->physWorld= volmgr->ReadAndConstructDetector();
 return this->physWorld;
 } else {
 G4NistManager* nist = G4NistManager::Instance();
-this->world_sizeXY =2*m;
-this-> world_sizeZ  = 2*m;
-this-> detector_sizeZ  = 2*cm;
+this->world_sizeXY     =   80*cm;
+this-> world_sizeZ  = 120*cm;
+this-> detector_sizeZ  = 2*mm;
 world_mat = nist->FindOrBuildMaterial("G4_Galactic");
-solidWorld =new G4Box("solidWorld",36*cm, 36*cm, 0.6*m);   
+solidWorld =new G4Box("solidWorld",this->world_sizeXY/2.0,this->world_sizeXY/2.0,this-> world_sizeZ/2.0);   
 logicWorld = new G4LogicalVolume(solidWorld, world_mat,"logicWorld");   
 logicWorld->SetVisAttributes(G4VisAttributes::GetInvisible());        
 physWorld = new G4PVPlacement(0,G4ThreeVector(),logicWorld, "World",0, false,0, false);
@@ -127,6 +127,8 @@ this->Pb=this->MaterialName("Pb");
 this->Tungsten=this->MaterialName("Tungsten");
 this->FFMAT=this->MaterialName("FFMAT");
 this->air=MaterialName("air");
+ origin=-this-> world_sizeZ /2.0;
+
 //
 TargetConstructor();
 //
@@ -147,16 +149,16 @@ void DetectorConstruction::ConstructSDandField(){
 G4SDManager* pSDManager = G4SDManager::GetSDMpointer();
 mSD = new H5PhaseSpaceWriter("Phantom");
 pSDManager-> AddNewDetector(mSD);
-SetSensitiveDetector("Detector",mSD);
+SetSensitiveDetector("PHASE_SPACE",mSD);
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 
 void DetectorConstruction::Setup_PhaseSpaceDetector()
 {
-detector_sizeZ  = 1*mm;
-solidDetector=new G4Box("Detector",36*cm, 36*cm, this->detector_sizeZ);
-logicdDetector =new G4LogicalVolume(solidDetector,this->world_mat,"Detector");
-new G4PVPlacement(0, G4ThreeVector(0,0,origin+this->zstop+detector_sizeZ),logicdDetector,"pDetector",this->logicWorld,false,0,false);
+G4double detector_z_pos=origin+this->zstop+this->detector_sizeZ/2.0;
+solidDetector=new G4Box("Detector",this->world_sizeXY/2.0, this->world_sizeXY/2.0, this->detector_sizeZ/2.0);
+logicdDetector =new G4LogicalVolume(solidDetector,this->world_mat,"PHASE_SPACE");
+new G4PVPlacement(0, G4ThreeVector(0,0,detector_z_pos),logicdDetector,"pDetector",this->logicWorld,false,0,false);
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void DetectorConstruction::SetH5PhaseSpaceZStop(G4double _Zstop){
@@ -242,7 +244,7 @@ material=this->Tungsten;
 }
 else if(materialName=="FFMAT")
 {
-this->FFMAT=new G4Material(name="FFMAT",density=8.3*g/cm3,ncomponents=3);
+this->FFMAT=new G4Material(name="FFMAT",density=8*g/cm3,ncomponents=3);
 FFMAT->AddElement(elementMn,33.33*perCent);
 FFMAT->AddElement(elementFe,33.33*perCent);
 FFMAT->AddElement(elementSi,33.34*perCent);
@@ -294,20 +296,25 @@ PhysicalVolumePrimaryCollimator=new G4PVPlacement(G4Transform3D(RotationMatrix_P
 void DetectorConstruction::FlatteningFilterConstructor()
 {
 G4VisAttributes*LogicalVolumeFlatteningFilterilter_VisAttribut=this->AttributName("LogicalVolumeFlatteningFilterilter_VisAttribut");
-G4double* r = new G4double[3];
-G4double* z = new G4double[3];
+G4double* r = new G4double[5];
+G4double* z = new G4double[5];
 r[0]= 0*cm;
-r[1]= 1.5*cm;
-r[2]= 2.*cm;
-z[0]= 1.5*mm;
-z[1]= 20*mm;
-z[2]= 30*mm;
-SolidVolumeFlatteningFilter= new G4GenericPolycone("SFF",0.0*rad,360.0*rad,3,r, z);
+r[1]= 1.*cm;
+r[2]= 1.7*cm;
+r[3]= 1.7*cm;
+r[4]= 2.*cm;
+
+z[0]= 1.25*mm;
+z[1]= 9*mm;
+z[2]= 13.8*mm;
+z[3]= 27*mm;
+z[4]= 27*mm;
+SolidVolumeFlatteningFilter= new G4GenericPolycone("SFF",0.0*rad,360.0*rad,4,r, z);
 G4RotationMatrix rotMatrixPhysicalVolumeTarget;
 G4double anglePhysicalVolumeTarget=180.0*deg;
 rotMatrixPhysicalVolumeTarget.rotateX(anglePhysicalVolumeTarget);
 LogicalVolumeFlatteningFilter=new G4LogicalVolume(SolidVolumeFlatteningFilter,this->FFMAT,"LogicalVolumeFlatteningFilter",0,0,0);
-PhysicalVolumeFlatteningFilter=new G4PVPlacement(G4Transform3D(rotMatrixPhysicalVolumeTarget,G4ThreeVector  (0*cm,0.0*m,9.5*cm+origin)),"PhysicalVolumeFlatteningFilter",LogicalVolumeFlatteningFilter,this->physWorld,false,0);
+PhysicalVolumeFlatteningFilter=new G4PVPlacement(G4Transform3D(rotMatrixPhysicalVolumeTarget,G4ThreeVector  (0*cm,0.0*m,8*cm+origin)),"PhysicalVolumeFlatteningFilter",LogicalVolumeFlatteningFilter,this->physWorld,false,0);
 LogicalVolumeFlatteningFilter->SetVisAttributes(LogicalVolumeFlatteningFilterilter_VisAttribut);
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
@@ -329,18 +336,19 @@ LogicalVolumeMonitor->SetVisAttributes(Monitor_VisAttribut);
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=*/
 void DetectorConstruction::JawsConstructor(){
-G4double FIELD=10.0*cm;
-G4double theta=std::atan(FIELD/(100.*cm));
+G4double FIELD = 20.0*cm;
+G4double  DSP  = 100.*cm;
+G4double theta=std::atan((FIELD/DSP)/2.0);
 G4VisAttributes*Jaws_VisAttribut=this->AttributName("Jaws_VisAttribut");
 G4double JAWS_DIM_X=20*cm;
 G4double JAWS_DIM_Y=20*cm;
-G4double JAWS_DIM_Z=20*cm;
+G4double JAWS_DIM_Z=10*cm;
 Jaws=new G4Box("Jaws",JAWS_DIM_Y/2.0,JAWS_DIM_Y/2.0,JAWS_DIM_Z/2.0);
 LogicalVolumeJawsX=new G4LogicalVolume(Jaws,this->Pb,"LogicalVolumeJawsX",0,0,0);
 LogicalVolumeJawsY=new G4LogicalVolume(Jaws,this->Pb,"LogicalVolumeJawsY",0,0,0);
 LogicalVolumeJawsX->SetVisAttributes(Jaws_VisAttribut);
 LogicalVolumeJawsY->SetVisAttributes(Jaws_VisAttribut);
-G4double JawsX_origin_centre_z=200*mm;
+G4double JawsX_origin_centre_z=20*cm;
 G4double JawsY_origin_centre_z=JawsX_origin_centre_z+JAWS_DIM_Z;
 G4double Distance_Source_JawsX=JawsX_origin_centre_z+JAWS_DIM_Z/2.0;
 G4double dx=Distance_Source_JawsX*tan(theta);

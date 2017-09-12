@@ -80,14 +80,9 @@ typedef struct
      unsigned int    NUMBER_OF_HISTORIES;
      double     Z_STOP;
 }BeamData;
- //
 PhspData tmp;
 EventData tmp_event;
-  //
 BeamData  myBeamData[1];
-  //
-PhspData*                          myPhspData;
-EventData*                         myEventData;
 std::vector<PhspData>    myPhspData_vector;
 std::vector<EventData>   myEventData_vector;
 void Initialize(G4HCofThisEvent*);

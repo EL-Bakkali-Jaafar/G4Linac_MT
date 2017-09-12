@@ -149,8 +149,6 @@ double
 //structure variables
 PhspData * RAM_PhspData;
 EventData * RAM_EventData;
-PhspData * myPhspData;
-EventData * myEventData;
 BeamData myTotalBeamData[1],myBeamData[1];
 std::vector<PhspData>   myPhspData_Vector;
 std::vector<EventData>   myEventData_Vector;

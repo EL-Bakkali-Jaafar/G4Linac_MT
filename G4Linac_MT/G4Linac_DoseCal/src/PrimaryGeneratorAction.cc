@@ -55,15 +55,13 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 auto id_thread = std::to_string(G4Threading::G4GetThreadId()); 
 //
 //
-G4cout<<" initializing class PrimaryGeneratorAction" <<G4endl;
+
 {
 G4RunManager* runManager = G4RunManager::GetRunManager();
 DetectorConstruction * pDetectorConstruction = (DetectorConstruction*)(runManager->GetUserDetectorConstruction()); 
 
 theG4UserH5PhaseSpaceReader = new G4UserH5PhaseSpaceReader();
- G4cout<<"pDetectorConstruction->GeneratorFlag : " << pDetectorConstruction->GeneratorFlag<<G4endl;
-// 
-G4cout<<" pDetectorConstruction->Nsplit : " << pDetectorConstruction->Nsplit<<G4endl;
+
 theG4UserH5PhaseSpaceReader-> SET_PARAMETERS(pDetectorConstruction->H5PhaseSpaceFileName,
                                              false,
                                                 pDetectorConstruction->NewZSTOP,// Z STOP
@@ -91,7 +89,7 @@ if (theG4UserH5PhaseSpaceReader) delete theG4UserH5PhaseSpaceReader;
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
-//G4cout<<"event id: "<<anEvent->GetEventID()<<G4endl;
+
 
  //
 theG4UserH5PhaseSpaceReader->GeneratePrimaryVertex(anEvent);

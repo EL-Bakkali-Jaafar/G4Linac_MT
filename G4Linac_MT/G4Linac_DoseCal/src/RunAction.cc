@@ -35,6 +35,12 @@
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 #include "RunAction.hh"
 #include <ctime>
+#include "G4Threading.hh"
+
+std::string  TERMINAL_HEADER =
+
+"#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#\nG4LINAC_MT version 1.O: a Geant4-based application for Medical Linear Accelerator\nDeveloped by Dr.Jaafar EL Bakkali, Assistant Prof. of Nuclear Physics, Rabat, Morocco,  10/09/ 2017\nWebpage :https://github.com/EL-Bakkali-Jaafar/G4Linac_MT\n#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#\n";
+
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
  double  RunAction::diffclock(clock_t clock1,clock_t clock2)
   {
@@ -54,14 +60,15 @@ RunAction::~RunAction()
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::BeginOfRunAction(const G4Run* )
 {
-
+G4cout<< TERMINAL_HEADER <<G4endl;
  begin=clock();
 }
 /*#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#*/
 void RunAction::EndOfRunAction(const G4Run*)
 {
  end=clock();
-G4cout<<"\033[36m"<<"G4Linac_DoseCal: Elapsed Time (s) is "<<double(diffclock(end,begin)/1000)<<"\033[0m"<<G4endl;
+int _NumberOfRunningWorkerThreads=G4Threading::GetNumberOfRunningWorkerThreads();
+G4cout<<"\033[36m"<<"G4Linac_DoseCal: Elapsed Time (s) is "<<(double(diffclock(end,begin)/1000)/(double) _NumberOfRunningWorkerThreads)<<"\033[0m"<<G4endl;
 
 
 
