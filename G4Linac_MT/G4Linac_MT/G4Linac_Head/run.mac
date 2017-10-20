@@ -1,0 +1,22 @@
+/Parameters/NumberOfEventsPerThread 100
+/Parameters/ZStop 0 cm
+/Parameters/H5PhaseSpaceName PHSP
+/Parameters/NameOfGeomFromTextFile /home/jaafar/Geant4/G4Linac_MT/Saturne43Linac/Saturne43.geom
+/Physics/setPCut 1 mm 
+/Physics/setECut 1 mm 
+/Physics/setGCut 1 mm 
+/run/geometryModified
+/run/numberOfThreads 4
+/run/initialize
+/Physics/Bremspe_Enabled false 
+/gps/particle gamma
+/gps/pos/centre 0 0   -60  cm 
+/gps/pos/type Beam
+/gps/pos/sigma_x 0 cm 
+/gps/pos/sigma_y 0 cm 
+/gps/pos/halfx 0 cm 
+/gps/pos/halfy 0 cm 
+/gps/direction 0 0 1
+/gps/ene/type Gauss
+/gps/ene/mono 6 MeV 
+/gps/ene/sigma 0 MeV 

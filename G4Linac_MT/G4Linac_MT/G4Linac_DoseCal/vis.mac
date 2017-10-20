@@ -1,0 +1,22 @@
+/Parameters/H5PhaseSpaceName /home/jaafar/Geant4/G4Linac_MT/PhaseSpaces/examplex6/PhaseSpace.h5
+/Parameters/ZSTOP 0 cm
+/Parameters/VoxalizedPhantomSizeX 20 cm
+/Parameters/VoxalizedPhantomSizeY 20 cm
+/Parameters/VoxalizedPhantomSizeZ 20 cm
+
+/Parameters/numberOfVoxelsAlongX 20
+/Parameters/numberOfVoxelsAlongY 20
+/Parameters/numberOfVoxelsAlongZ 20
+/Parameters/GeneratorFlag 2
+/Parameters/Nsplit 60
+/Parameters/NumberOfEventsPerThread 100000
+/Physics/setGCut 0.01 mm
+/Physics/setECut 0.01 mm
+/Physics/setPCut 0.01 mm
+/Parameters/ROGcenterPos 0 0 20 cm
+/Parameters/NameOfGeomFromTextFile /home/jaafar/Geant4/G4Linac_MT/G4Linac_DoseCal/phantom_heterogeneous.geom
+/run/geometryModified
+/run/numberOfThreads 1
+/run/initialize
+/vis/open OGL 600x600-0+0
+/vis/drawVolume
